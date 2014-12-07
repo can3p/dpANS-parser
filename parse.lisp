@@ -23,7 +23,9 @@
 	       (typep token 'whitespace))))
 
 (define-parser text-element-parser
-  (alternative 'word-parser 'punctuation-parser))
+  (alternative 'word-parser
+	       'punctuation-parser
+	       'whitespace-parser))
 
 (define-parser text-parser
   (consecutive #'cons
