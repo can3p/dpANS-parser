@@ -19,3 +19,8 @@
 
 (define-parser text-element-parser
   (alternative 'word-parser 'punctuation-parser))
+
+(define-parser text-parser
+  (consecutive #'cons
+	       'word-parser
+	       (repeat* #'list 'text-element-parser)))
