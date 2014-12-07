@@ -30,7 +30,10 @@
     (parse-trace-output "trying ~s on ~s~%" name tokens)
     (multiple-value-bind (successp result rest)
 	(funcall parser tokens)
-      (parse-trace-output "~asuccess~%" (if successp "" "no "))
+      (parse-trace-output "~a ~s ~s~%"
+			  (if successp "success" "failure")
+			  result
+			  rest)
       (values successp result rest))))
 
 (defmacro define-parser (name &body body)
