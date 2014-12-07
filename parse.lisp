@@ -22,6 +22,12 @@
 	     (lambda (token)
 	       (typep token 'whitespace))))
 
+(define-parser single-newline-parser
+  (singleton #'identity
+	     (lambda (token)
+	       (and (typep token 'newlines)
+		    (= 1 (length (contents token)))))))
+
 (define-parser text-element-parser
   (alternative 'word-parser
 	       'punctuation-parser
