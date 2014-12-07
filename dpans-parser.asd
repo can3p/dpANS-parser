@@ -5,4 +5,5 @@
   :components
   ((:file "packages")
    (:file "read-token")
-   (:file "combinatory-parsing")))
+   (:file "combinatory-parsing")
+   (:file "parse")))
