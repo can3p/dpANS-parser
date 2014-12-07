@@ -71,20 +71,12 @@
 ;;; every Pi fails, then Q also fails.
 (defun alternative (&rest parsers)
   (lambda (tokens)
-    ;; We promised not to use the LOOP macro, so we do this with
-    ;; TAGBODY instead. 
-    (block nil
-      (let ((remaining-parsers parsers))
-	(tagbody
-	 again
-	   (if (null remaining-parsers)
-	       (return (values nil nil tokens))
-	       (multiple-value-bind (successp result rest)
-		   (funcall (car remaining-parsers) tokens)
-		 (pop remaining-parsers)
-		 (if successp
-		     (return (values t result rest))
-		     (go again)))))))))
+    (loop for parser in parsers
+	  do (multiple-value-bind (successp result rest)
+		 (funcall parser tokens)
+	       (when successp
+		 (return (values t result rest))))
+	  finally (return (values nil nil tokens)))))
 
 ;;; Take a function designator (called the COMBINER) and a list of
 ;;; parsers P1, P2, ..., Pn and return a parser Q that invokes every
@@ -94,26 +86,18 @@
 ;;; each Pi.
 (defun consecutive (combiner &rest parsers)
   (lambda (tokens)
-    ;; We promised not to use the LOOP macro, so we do this with
-    ;; TAGBODY instead. 
-    (block nil
-      (let ((remaining-tokens tokens)
-	    (remaining-parsers parsers)
-	    (results '()))
-	(tagbody
-	 again
-	   (if (null remaining-parsers)
-	       (return (values t
-			       (apply combiner (reverse results))
-			       remaining-tokens))
-	       (multiple-value-bind (successp result rest)
-		   (funcall (car remaining-parsers) remaining-tokens)
-		 (pop remaining-parsers)
-		 (if successp
-		     (progn (push result results)
-			    (setf remaining-tokens rest)
-			    (go again))
-		     (return (values nil nil tokens))))))))))
+    (loop with remaining-tokens = tokens
+	  with results = '()
+	  for parser in parsers
+	  do (multiple-value-bind (successp result rest)
+		 (funcall parser remaining-tokens)
+	       (if successp
+		   (progn (setf remaining-tokens rest)
+			  (push result results))
+		   (return (values nil nil tokens))))
+	  finally (return (values t
+				  (apply combiner (reverse tokens))
+				  remaining-tokens)))))
 
 ;;; Take a function designator (called the COMBINER) and a parser P
 ;;; and return a parser Q that invokes P repeatedly until it fails,
