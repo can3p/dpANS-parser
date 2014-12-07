@@ -99,7 +99,7 @@
 			  (push result results))
 		   (return (values nil nil tokens))))
 	  finally (return (values t
-				  (apply combiner (reverse tokens))
+				  (apply combiner (reverse results))
 				  remaining-tokens)))))
 
 ;;; Take a function designator (called the COMBINER) and a parser P
