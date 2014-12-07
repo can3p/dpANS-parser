@@ -133,20 +133,16 @@
 	  (funcall parser tokens)
 	(if (not successp)
 	    (values nil nil tokens)
-	    (let ((remaining-tokens rest))
-	      (push result results)
-	      (block nil
-		(tagbody
-		 again 
-		   (multiple-value-bind (successp result rest)
-		       (funcall parser remaining-tokens)
-		     (if successp
-			 (progn (push result results)
-				(setf remaining-tokens rest)
-				(go again))
-			 (return (values t
-					 (apply combiner (reverse results))
-					 remaining-tokens))))))))))))
+	    (loop initially (push result results)
+		  with remaining-tokens = rest
+		  do (multiple-value-bind (successp result rest)
+			 (funcall parser remaining-tokens)
+		       (if successp
+			   (progn (setf remaining-tokens rest)
+				  (push result results))
+			   (return (values t
+					   (apply combiner (reverse result))
+					   remaining-tokens))))))))))
 
 ;;; Take a default value and a parser P and return a parser Q that
 ;;; always succeeds.  Q invokes P once.  If P succeeds, the Q succeeds
