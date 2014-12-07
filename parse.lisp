@@ -17,6 +17,11 @@
 	     (lambda (token)
 	       (typep token 'punctuation))))
 
+(define-parser whitespace-parser
+  (singleton #'identity
+	     (lambda (token)
+	       (typep token 'whitespace))))
+
 (define-parser text-element-parser
   (alternative 'word-parser 'punctuation-parser))
 
