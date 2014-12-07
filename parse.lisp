@@ -28,6 +28,12 @@
 	       (and (typep token 'newlines)
 		    (= 1 (length (contents token)))))))
 
+(define-parser multiple-newline-parser
+  (singleton #'identity
+	     (lambda (token)
+	       (and (typep token 'newlines)
+		    (> (length (contents token)) 1)))))
+
 (define-parser text-element-parser
   (alternative 'word-parser
 	       'punctuation-parser
