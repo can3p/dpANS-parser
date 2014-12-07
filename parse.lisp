@@ -37,7 +37,8 @@
 (define-parser text-element-parser
   (alternative 'word-parser
 	       'punctuation-parser
-	       'whitespace-parser))
+	       'whitespace-parser
+	       'single-newline-parser))
 
 (define-parser text-parser
   (consecutive #'cons
