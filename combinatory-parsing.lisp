@@ -109,20 +109,16 @@
 ;;; empty list of results, and the original list of tokens as usual.
 (defun repeat* (combiner parser)
   (lambda (tokens)
-    (let ((remaining-tokens tokens)
-	  (results '()))
-      (block nil
-	(tagbody
-	 again
-	   (multiple-value-bind (successp result rest)
-	       (funcall parser remaining-tokens)
-	     (if successp
-		 (progn (push result results)
-			(setf remaining-tokens rest)
-			(go again))
-		 (return (values t
-				 (apply combiner (reverse results))
-				 remaining-tokens)))))))))
+    (loop with remaining-tokens = tokens
+	  with results = '()
+	  do (multiple-value-bind (successp result rest)
+		 (funcall parser remaining-tokens)
+	       (if successp
+		   (progn (setf remaining-tokens rest)
+			  (push result results))
+		   (return (values t
+				   (apply combiner (reverse result))
+				   remaining-tokens)))))))
 
 ;;; Take a function designator (called the COMBINER) and a parser P
 ;;; and return a parser Q that invokes P repeatedly until it fails,
