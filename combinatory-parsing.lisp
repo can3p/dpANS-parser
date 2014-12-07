@@ -120,7 +120,7 @@
 		   (progn (setf remaining-tokens rest)
 			  (push result results))
 		   (return (values t
-				   (apply combiner (reverse result))
+				   (apply combiner (reverse results))
 				   remaining-tokens)))))))
 
 ;;; Take a function designator (called the COMBINER) and a parser P
