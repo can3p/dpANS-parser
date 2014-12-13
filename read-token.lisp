@@ -23,7 +23,7 @@
     (format stream "P ~s" (contents object))))
 
 (defun punctuation-p (char)
-  (find char ".,;:{}()[]<>-"))
+  (find char "!\"#$%&'()*+,-.:;<=>?@[\\]^_`{|}~"))
 
 (defun read-punctuation (stream)
   (let ((char (read-char stream nil nil)))
