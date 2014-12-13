@@ -160,4 +160,16 @@
 	  (values t result rest)
 	  (values t default tokens)))))
 
+;;; Take a predicate and a parser P and return a parser Q that
+;;; succeeds if and only if P succeeds, and the predicate returns true
+;;; when applied to the result of P.  When Q succeeds it returns the
+;;; same result as P.
+(defun narrow (predicate parser)
+  (lambda (tokens)
+    (multiple-value-bind (successp result rest)
+	(funcall parser tokens)
+      (if (and successp (funcall predicate result))
+	  (values t result rest)
+	  (values nil nil tokens)))))
+
 ;;;  LocalWords:  parsers
