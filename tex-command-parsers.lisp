@@ -28,14 +28,14 @@
   (narrow (lambda (word) (string= (contents word) "endchapter"))
 	  'tex-command-parser))
 
-;;; This parser succeeds for the TeX command \beginsection.  It returns an
-;;; IDENTIFIER token containing the string "beginsection".
+;;; This parser succeeds for the TeX command \beginSection.  It returns an
+;;; IDENTIFIER token containing the string "beginSection".
 (define-parser beginsection-command-parser
-  (narrow (lambda (word) (string= (contents word) "beginsection"))
+  (narrow (lambda (word) (string= (contents word) "beginSection"))
 	  'tex-command-parser))
 
-;;; This parser succeeds for the TeX command \endsection.  It returns an
-;;; IDENTIFIER token containing the string "endsection".
+;;; This parser succeeds for the TeX command \endSection.  It returns an
+;;; IDENTIFIER token containing the string "endSection".
 (define-parser endsection-command-parser
-  (narrow (lambda (word) (string= (contents word) "endsection"))
+  (narrow (lambda (word) (string= (contents word) "endSection"))
 	  'tex-command-parser))
