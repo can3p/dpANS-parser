@@ -6,4 +6,5 @@
   ((:file "packages")
    (:file "read-token")
    (:file "combinatory-parsing")
-   (:file "parse")))
+   (:file "parse")
+   (:file "tex-command-parsers")))
