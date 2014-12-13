@@ -61,3 +61,9 @@
 		 command-word)
 	       'backslash-parser
 	       'word-parser))
+
+;;; This parser succeeds for the TeX command \label.  It returns an
+;;; IDENTIFIER token containing the string "label".
+(define-parser label-command-parser
+  (narrow (lambda (word) (string= (contents word) "label"))
+	  'tex-command-parser))
