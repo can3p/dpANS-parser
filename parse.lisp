@@ -51,3 +51,13 @@
 (define-parser backslash-parser
   (narrow (lambda (punctuation) (string= (contents punctuation) "\\"))
 	  'punctuation-parser))
+
+;;; This parser succeeds for a backslash followed by a word W with
+;;; nothing in between the two.  It returns W as the result of the
+;;; parse.
+(define-parser tex-command-parser
+  (consecutive (lambda (backslash command-word)
+		 (declare (ignore backslash))
+		 command-word)
+	       'backslash-parser
+	       'word-parser))
