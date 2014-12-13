@@ -44,3 +44,10 @@
   (consecutive #'cons
 	       'word-parser
 	       (repeat* #'list 'text-element-parser)))
+
+;;; This parser succeeds for a single punctuation token that contains
+;;; a single backslash character.  It returns the punctuation token as
+;;; the result of the parse.
+(define-parser backslash-parser
+  (narrow (lambda (punctuation) (string= (contents punctuation) "\\"))
+	  'punctuation-parser))
