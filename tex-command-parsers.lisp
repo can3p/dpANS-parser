@@ -57,3 +57,9 @@
 (define-parser newterm-command-parser
   (narrow (lambda (word) (string= (contents word) "newterm"))
 	  'tex-command-parser))
+
+;;; This parser succeeds for the TeX command \oftype.  It returns an
+;;; IDENTIFIER token containing the string "oftype".
+(define-parser oftype-command-parser
+  (narrow (lambda (word) (string= (contents word) "oftype"))
+	  'tex-command-parser))
