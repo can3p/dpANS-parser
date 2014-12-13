@@ -46,8 +46,14 @@
   (narrow (lambda (word) (string= (contents word) "beginsubSection"))
 	  'tex-command-parser))
 
-;;; This parser succeeds for the TeX command \endsubSection.  It returns an
-;;; IDENTIFIER token containing the string "endsubSection".
-(define-parser endsubsection-command-parser
-  (narrow (lambda (word) (string= (contents word) "endsubSection"))
+;;; This parser succeeds for the TeX command \term.  It returns an
+;;; IDENTIFIER token containing the string "term".
+(define-parser term-command-parser
+  (narrow (lambda (word) (string= (contents word) "term"))
+	  'tex-command-parser))
+
+;;; This parser succeeds for the TeX command \newterm.  It returns an
+;;; IDENTIFIER token containing the string "newterm".
+(define-parser newterm-command-parser
+  (narrow (lambda (word) (string= (contents word) "newterm"))
 	  'tex-command-parser))
