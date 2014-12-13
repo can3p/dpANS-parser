@@ -127,6 +127,10 @@
 (defclass identifier (token)
   ())
 
+(defgeneric identifierp (token)
+  (:method (token) nil)
+  (:method ((token token)) t))
+
 (defmethod print-object ((object identifier) stream)
   (print-unreadable-object (object stream)
     (format stream "ID ~s" (contents object))))
