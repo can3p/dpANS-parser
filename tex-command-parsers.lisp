@@ -39,3 +39,15 @@
 (define-parser endsection-command-parser
   (narrow (lambda (word) (string= (contents word) "endSection"))
 	  'tex-command-parser))
+
+;;; This parser succeeds for the TeX command \beginsubSection.  It returns an
+;;; IDENTIFIER token containing the string "beginsubSection".
+(define-parser beginsubsection-command-parser
+  (narrow (lambda (word) (string= (contents word) "beginsubSection"))
+	  'tex-command-parser))
+
+;;; This parser succeeds for the TeX command \endsubSection.  It returns an
+;;; IDENTIFIER token containing the string "endsubSection".
+(define-parser endsubsection-command-parser
+  (narrow (lambda (word) (string= (contents word) "endsubSection"))
+	  'tex-command-parser))
