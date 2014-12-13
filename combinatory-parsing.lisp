@@ -1,5 +1,9 @@
 (cl:in-package #:dpans-parser)
 
+;;; Warning: This framework for combinatory parsing is not a full
+;;; implementation of the technique, in that it does not do any
+;;; backtracking.
+
 ;;; A parser is a function that takes a list of tokens to parse, and
 ;;; that returns three values:
 ;;;
