@@ -172,4 +172,15 @@
 	  (values t result rest)
 	  (values nil nil tokens)))))
 
+;;; Take a parser P and return a parser Q that succeeds if and only if
+;;; P succeeds.  If P succeeds, then Q returns the same result as P.
+;;; Whether P succeeds or fails, Q always returns the initial sequence
+;;; of tokes.
+(defun peek (parser)
+  (lambda (tokens)
+    (multiple-value-bind (successp result rest)
+	(funcall parser tokens)
+      (declare (ignore rest))
+      (values successp result tokens))))
+
 ;;;  LocalWords:  parsers
