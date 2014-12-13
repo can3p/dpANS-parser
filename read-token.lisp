@@ -18,6 +18,10 @@
 (defclass punctuation (token)
   ())
 
+(defgeneric punctuationp (token)
+  (:method (token) nil)
+  (:method ((token punctuation)) t))
+
 (defmethod print-object ((object punctuation) stream)
   (print-unreadable-object (object stream)
     (format stream "P ~s" (contents object))))
@@ -129,7 +133,7 @@
 
 (defgeneric identifierp (token)
   (:method (token) nil)
-  (:method ((token token)) t))
+  (:method ((token identifier)) t))
 
 (defmethod print-object ((object identifier) stream)
   (print-unreadable-object (object stream)
