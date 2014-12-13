@@ -15,3 +15,15 @@
 (define-parser label-command-parser
   (narrow (lambda (word) (string= (contents word) "label"))
 	  'tex-command-parser))
+
+;;; This parser succeeds for the TeX command \beginchapter.  It returns an
+;;; IDENTIFIER token containing the string "beginchapter".
+(define-parser beginchapter-command-parser
+  (narrow (lambda (word) (string= (contents word) "beginchapter"))
+	  'tex-command-parser))
+
+;;; This parser succeeds for the TeX command \endchapter.  It returns an
+;;; IDENTIFIER token containing the string "endchapter".
+(define-parser endchapter-command-parser
+  (narrow (lambda (word) (string= (contents word) "endchapter"))
+	  'tex-command-parser))
