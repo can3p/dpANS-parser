@@ -1,65 +1,81 @@
 (cl:in-package #:dpans-parser)
 
+;; Text = WHITESPACE | BLOCK
+
+;; WHITESPACE = ' ' | NEW_LINE | COMMENT
+
+;; COMMENT = NEW_LINE? '%' Not(NEW_LINE) NEW_LINE
+
+;; BLOCK = (BLOCK_OPERATOR | TEXT) ((NEW_LINE NEW_LINE) | EOF)
+
+;; BLOCK_OPERATOR = NEW_LINE? OPERATOR NEW_LINE
+
+;; OPERATOR = "\\" WORD '%'? OPERATOR_ARGUMENT+
+
+;; OPERATOR_ARGUMENT = "{" [^}]+ "}"
+
+;; TEXT = ((WORD | OPERATOR) WHITESPACE*)
+
+(defclass <command> ()
+    (
+     (is-new :initarg :is-new :initform nil :reader is-new)
+     (name :initarg :name :reader name)
+     ))
+
+(defmethod print-object ((instance <command>) stream)
+  (format stream "<command ~s>~%" (name instance)))
+
 ;;; This parser succeeds for a backslash followed by a word W with
 ;;; nothing in between the two.  It returns W as the result of the
 ;;; parse.
 (define-parser tex-command-parser
   (consecutive (lambda (backslash command-word)
 		 (declare (ignore backslash))
-		 command-word)
+                 (make-instance '<command>
+                                :name (contents command-word)))
 	       'backslash-parser
 	       'word-parser))
 
-;;; This parser succeeds for the TeX command \label.  It returns an
-;;; IDENTIFIER token containing the string "label".
-(define-parser label-command-parser
-  (narrow (lambda (word) (string= (contents word) "label"))
-	  'tex-command-parser))
+(define-parser word-parser
+  (singleton #'identity #'identifierp))
 
-;;; This parser succeeds for the TeX command \beginchapter.  It returns an
-;;; IDENTIFIER token containing the string "beginchapter".
-(define-parser beginchapter-command-parser
-  (narrow (lambda (word) (string= (contents word) "beginchapter"))
-	  'tex-command-parser))
+(define-parser punctuation-parser
+  (singleton #'identity
+	     (lambda (token)
+	       (typep token 'punctuation))))
 
-;;; This parser succeeds for the TeX command \endchapter.  It returns an
-;;; IDENTIFIER token containing the string "endchapter".
-(define-parser endchapter-command-parser
-  (narrow (lambda (word) (string= (contents word) "endchapter"))
-	  'tex-command-parser))
+(define-parser whitespace-parser
+  (singleton #'identity
+	     (lambda (token)
+	       (typep token 'whitespace))))
 
-;;; This parser succeeds for the TeX command \beginSection.  It returns an
-;;; IDENTIFIER token containing the string "beginSection".
-(define-parser beginsection-command-parser
-  (narrow (lambda (word) (string= (contents word) "beginSection"))
-	  'tex-command-parser))
+(define-parser single-newline-parser
+  (singleton #'identity
+	     (lambda (token)
+	       (and (typep token 'newlines)
+		    (= 1 (length (contents token)))))))
 
-;;; This parser succeeds for the TeX command \endSection.  It returns an
-;;; IDENTIFIER token containing the string "endSection".
-(define-parser endsection-command-parser
-  (narrow (lambda (word) (string= (contents word) "endSection"))
-	  'tex-command-parser))
+(define-parser multiple-newline-parser
+  (singleton #'identity
+	     (lambda (token)
+	       (and (typep token 'newlines)
+		    (> (length (contents token)) 1)))))
 
-;;; This parser succeeds for the TeX command \beginsubSection.  It returns an
-;;; IDENTIFIER token containing the string "beginsubSection".
-(define-parser beginsubsection-command-parser
-  (narrow (lambda (word) (string= (contents word) "beginsubSection"))
-	  'tex-command-parser))
+(define-parser text-element-parser
+  (alternative 'word-parser
+	       'punctuation-parser
+	       'whitespace-parser
+	       'single-newline-parser))
 
-;;; This parser succeeds for the TeX command \term.  It returns an
-;;; IDENTIFIER token containing the string "term".
-(define-parser term-command-parser
-  (narrow (lambda (word) (string= (contents word) "term"))
-	  'tex-command-parser))
+(define-parser text-parser
+  (consecutive #'cons
+	       'word-parser
+	       (repeat* #'list 'text-element-parser)))
 
-;;; This parser succeeds for the TeX command \newterm.  It returns an
-;;; IDENTIFIER token containing the string "newterm".
-(define-parser newterm-command-parser
-  (narrow (lambda (word) (string= (contents word) "newterm"))
-	  'tex-command-parser))
+;;; This parser succeeds for a single punctuation token that contains
+;;; a single backslash character.  It returns the punctuation token as
+;;; the result of the parse.
+(define-parser backslash-parser
+  (narrow (lambda (punctuation) (string= (contents punctuation) "\\"))
+	  'punctuation-parser))
 
-;;; This parser succeeds for the TeX command \oftype.  It returns an
-;;; IDENTIFIER token containing the string "oftype".
-(define-parser oftype-command-parser
-  (narrow (lambda (word) (string= (contents word) "oftype"))
-	  'tex-command-parser))

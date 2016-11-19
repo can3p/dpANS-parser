@@ -1,44 +1,9 @@
 (cl:in-package #:dpans-parser)
 
-(define-parser word-parser
-  (singleton #'identity #'identifierp))
+(defun test (&optional file)
+  (with-open-file (in (or file (merge-pathnames #p"dpans/concept-arrays-mod.tex" (asdf:system-source-file :parse-lisp-spec))))
+    (let ((tokens (tokenize-stream in)))
+      tokens)))
 
-(define-parser punctuation-parser
-  (singleton #'identity
-	     (lambda (token)
-	       (typep token 'punctuation))))
-
-(define-parser whitespace-parser
-  (singleton #'identity
-	     (lambda (token)
-	       (typep token 'whitespace))))
-
-(define-parser single-newline-parser
-  (singleton #'identity
-	     (lambda (token)
-	       (and (typep token 'newlines)
-		    (= 1 (length (contents token)))))))
-
-(define-parser multiple-newline-parser
-  (singleton #'identity
-	     (lambda (token)
-	       (and (typep token 'newlines)
-		    (> (length (contents token)) 1)))))
-
-(define-parser text-element-parser
-  (alternative 'word-parser
-	       'punctuation-parser
-	       'whitespace-parser
-	       'single-newline-parser))
-
-(define-parser text-parser
-  (consecutive #'cons
-	       'word-parser
-	       (repeat* #'list 'text-element-parser)))
-
-;;; This parser succeeds for a single punctuation token that contains
-;;; a single backslash character.  It returns the punctuation token as
-;;; the result of the parse.
-(define-parser backslash-parser
-  (narrow (lambda (punctuation) (string= (contents punctuation) "\\"))
-	  'punctuation-parser))
+(defun test-string ()
+  (tex-command-parser (tokenize-string "\\term{List element}")))

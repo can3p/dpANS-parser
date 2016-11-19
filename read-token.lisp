@@ -193,6 +193,10 @@
 ;;;
 ;;; Tokenize a stream or a file.
 
+(defun tokenize-string (str)
+  (with-input-from-string (in str)
+    (tokenize-stream in)))
+
 (defun tokenize-stream (stream)
   (loop for token = (read-token stream)
 	until (null token)
