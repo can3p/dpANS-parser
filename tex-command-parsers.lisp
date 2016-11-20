@@ -20,6 +20,14 @@
 (defun flatten-args (&rest args)
   (apply #'concatenate 'list args))
 
+(defclass <block> ()
+  (
+   (contents :initarg :contents :initform nil :reader contents)
+   ))
+
+(defmethod print-object ((instance <block>) stream)
+  (format stream "<block>~%Block contents:~a~%"
+          (contents instance)))
 
 (defclass <command> ()
     (
@@ -33,6 +41,15 @@
           (name instance)
           (args instance)
           ))
+
+(define-parser block-parser
+  (consecutive (lambda (contents &rest rest)
+                 (declare (ignore rest))
+                 (make-instance '<block>
+                                :contents contents))
+               'tex-command-parser
+               'multiple-newline-parser
+               (repeat* 'pass-args 'comment-parser)))
 
 ;;; This parser succeeds for a backslash followed by a word W with
 ;;; nothing in between the two.  It returns W as the result of the
@@ -71,6 +88,11 @@
   (singleton #'identity
 	     (lambda (token)
 	       (typep token 'punctuation))))
+
+(define-parser comment-parser
+  (singleton #'identity
+             (lambda (token)
+               (typep token 'comment))))
 
 (define-parser whitespace-parser
   (singleton #'identity
