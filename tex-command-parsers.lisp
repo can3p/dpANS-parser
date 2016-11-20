@@ -29,13 +29,13 @@
   (format stream "<file>~%File contents:~a~%"
           (contents instance)))
 
-(defclass <block> ()
+(defclass <text-block> ()
   (
    (contents :initarg :contents :initform nil :reader contents)
    ))
 
-(defmethod print-object ((instance <block>) stream)
-  (format stream "<block>~%Block contents:~a~%"
+(defmethod print-object ((instance <text-block>) stream)
+  (format stream "<text-block>~%Text Block contents:~a~%"
           (contents instance)))
 
 (defclass <command> ()
@@ -66,8 +66,7 @@
 (define-parser block-parser
   (consecutive (lambda (contents &rest rest)
                  (declare (ignore rest))
-                 (make-instance '<block>
-                                :contents contents))
+                 contents)
                (alternative 'tex-command-parser 'text-parser)
                (alternative 'multiple-newline-parser 'single-newline-parser)))
 
@@ -79,11 +78,11 @@
                'single-newline-parser))
 
 (define-parser text-parser
-  (consecutive #'cons
+  (consecutive (lambda (first rest)
+                 (make-instance '<text-block>
+                                :contents (cons first rest)))
                'word-parser
                (repeat* #'list 'text-element-parser)))
-
-
 
 ;;; This parser succeeds for a backslash followed by a word W with
 ;;; nothing in between the two.  It returns W as the result of the
