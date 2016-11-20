@@ -69,7 +69,7 @@
                  (make-instance '<block>
                                 :contents contents))
                (alternative 'tex-command-parser 'text-parser)
-               'multiple-newline-parser))
+               (alternative 'multiple-newline-parser 'single-newline-parser)))
 
 (define-parser text-element-parser
   (alternative 'word-parser
