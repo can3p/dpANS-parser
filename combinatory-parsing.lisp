@@ -148,7 +148,7 @@
 			   (progn (setf remaining-tokens rest)
 				  (push result results))
 			   (return (values t
-					   (apply combiner (reverse result))
+					   (apply combiner (reverse results))
 					   remaining-tokens))))))))))
 
 ;;; Take a default value and a parser P and return a parser Q that
