@@ -122,8 +122,7 @@
     (with-output-to-string (string-stream)
       (loop for char = (read-char stream nil nil)
 	    until (or (null char) (eql char #\Newline))
-	    do (write-char char string-stream)
-            finally (maybe-unread-char char stream)))))
+	    do (write-char char string-stream)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -146,7 +145,7 @@
     (with-output-to-string (string-stream)
       (loop for char = (read-char stream nil nil)
 	    until (null char)
-	    while (or (eql char #\\)
+	    while (or ;; (eql char #\\)
 		      (alphanumericp char)
 		      (eql char #\-))
 	    do (write-char char string-stream)

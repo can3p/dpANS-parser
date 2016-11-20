@@ -20,6 +20,10 @@
 (defun flatten-args (&rest args)
   (apply #'concatenate 'list args))
 
+(defun pass-first (first &rest args)
+  (declare (ignore args))
+  first)
+
 (defclass <file> ()
   (
    (contents :initarg :contents :initform nil :reader contents)
@@ -69,8 +73,9 @@
   (consecutive (lambda (contents &rest rest)
                  (declare (ignore rest))
                  contents)
-               (alternative 'tex-command-parser 'text-parser)
-               'block-terminator-parser))
+               (alternative
+                (consecutive 'pass-first 'tex-command-parser 'block-terminator-parser)
+                (consecutive 'pass-first 'text-parser 'block-terminator-parser))))
 
 (define-parser block-terminator-parser
   (repeat+ 'pass-args
@@ -78,17 +83,18 @@
 
 (define-parser text-element-parser
   (alternative 'word-parser
+               'tex-command-parser
                'punctuation-parser
                'whitespace-parser
-               'tex-command-parser
                'single-newline-parser))
 
 (define-parser text-parser
-  (consecutive (lambda (first rest)
+  (consecutive (lambda (first second rest)
                  (make-instance '<text-block>
-                                :contents (cons first rest)))
-               'word-parser
-               (repeat* #'list 'text-element-parser)))
+                                :contents (cons first (cons second rest))))
+               (alternative 'word-parser 'tex-command-parser)
+               'text-element-parser
+               (repeat+ #'list 'text-element-parser)))
 
 ;;; This parser succeeds for a backslash followed by a word W with
 ;;; nothing in between the two.  It returns W as the result of the
