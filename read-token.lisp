@@ -122,7 +122,8 @@
     (with-output-to-string (string-stream)
       (loop for char = (read-char stream nil nil)
 	    until (or (null char) (eql char #\Newline))
-	    do (write-char char string-stream)))))
+	    do (write-char char string-stream)
+            finally (maybe-unread-char char stream)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -199,8 +200,9 @@
 
 (defun tokenize-stream (stream)
   (loop for token = (read-token stream)
-	until (null token)
-	collect token))
+        until (null token)
+        when (not (typep token 'comment))
+        collect token))
 
 (defun tokenize-file (filename)
   (with-open-file (stream filename :direction :input)
