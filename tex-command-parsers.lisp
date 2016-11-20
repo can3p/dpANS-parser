@@ -20,6 +20,15 @@
 (defun flatten-args (&rest args)
   (apply #'concatenate 'list args))
 
+(defclass <file> ()
+  (
+   (contents :initarg :contents :initform nil :reader contents)
+   ))
+
+(defmethod print-object ((instance <file>) stream)
+  (format stream "<file>~%File contents:~a~%"
+          (contents instance)))
+
 (defclass <block> ()
   (
    (contents :initarg :contents :initform nil :reader contents)
@@ -42,14 +51,39 @@
           (args instance)
           ))
 
+(define-parser file-parser
+  (consecutive (lambda (_ contents)
+                 (declare (ignore _))
+                 (make-instance '<file>
+                                :contents contents))
+               (repeat+ (lambda (&rest r)
+                          (declare (ignore r))
+                          nil)
+                        (alternative 'single-newline-parser 'multiple-newline-parser))
+               (repeat+ 'pass-args
+                        'block-parser)))
+
 (define-parser block-parser
   (consecutive (lambda (contents &rest rest)
                  (declare (ignore rest))
                  (make-instance '<block>
                                 :contents contents))
+               (alternative 'tex-command-parser 'text-parser)
+               'multiple-newline-parser))
+
+(define-parser text-element-parser
+  (alternative 'word-parser
+               'punctuation-parser
+               'whitespace-parser
                'tex-command-parser
-               'multiple-newline-parser
-               (repeat* 'pass-args 'comment-parser)))
+               'single-newline-parser))
+
+(define-parser text-parser
+  (consecutive #'cons
+               'word-parser
+               (repeat* #'list 'text-element-parser)))
+
+
 
 ;;; This parser succeeds for a backslash followed by a word W with
 ;;; nothing in between the two.  It returns W as the result of the
@@ -89,11 +123,6 @@
 	     (lambda (token)
 	       (typep token 'punctuation))))
 
-(define-parser comment-parser
-  (singleton #'identity
-             (lambda (token)
-               (typep token 'comment))))
-
 (define-parser whitespace-parser
   (singleton #'identity
 	     (lambda (token)
@@ -101,26 +130,15 @@
 
 (define-parser single-newline-parser
   (singleton #'identity
-	     (lambda (token)
-	       (and (typep token 'newlines)
-		    (= 1 (length (contents token)))))))
+             (lambda (token)
+               (and (typep token 'newlines)
+                    (= 1 (length (contents token)))))))
 
 (define-parser multiple-newline-parser
   (singleton #'identity
-	     (lambda (token)
-	       (and (typep token 'newlines)
-		    (> (length (contents token)) 1)))))
-
-(define-parser text-element-parser
-  (alternative 'word-parser
-	       'punctuation-parser
-	       'whitespace-parser
-	       'single-newline-parser))
-
-(define-parser text-parser
-  (consecutive #'cons
-	       'word-parser
-	       (repeat* #'list 'text-element-parser)))
+             (lambda (token)
+               (and (typep token 'newlines)
+                    (> (length (contents token)) 1)))))
 
 ;;; This parser succeeds for a single punctuation token that contains
 ;;; a single backslash character.  It returns the punctuation token as
