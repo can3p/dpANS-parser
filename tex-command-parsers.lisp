@@ -40,16 +40,18 @@
 
 (defclass <command> ()
     (
-     (is-definition :initarg :is-definition :initform nil :reader is-definition)
+     (is-closing :initarg :is-closing :initform nil :reader is-closing)
      (args :initarg :args :initform nil :reader args)
      (name :initarg :name :reader name)
      ))
 
 (defmethod print-object ((instance <command>) stream)
-  (format stream "<command ~s>~%Command args:~a~%"
-          (name instance)
-          (args instance)
-          ))
+  (let ((status (if (is-closing instance) "CLOSE" "OPEN")))
+    (format stream "<command ~s ~a>~%Command args:~a~%"
+            (name instance)
+            status
+            (args instance)
+            )))
 
 (define-parser file-parser
   (consecutive (lambda (_ contents)
@@ -68,7 +70,11 @@
                  (declare (ignore rest))
                  contents)
                (alternative 'tex-command-parser 'text-parser)
-               (alternative 'multiple-newline-parser 'single-newline-parser)))
+               'block-terminator-parser))
+
+(define-parser block-terminator-parser
+  (repeat+ 'pass-args
+           (alternative 'multiple-newline-parser 'single-newline-parser)))
 
 (define-parser text-element-parser
   (alternative 'word-parser
@@ -88,13 +94,15 @@
 ;;; nothing in between the two.  It returns W as the result of the
 ;;; parse.
 (define-parser tex-command-parser
-  (consecutive (lambda (backslash command-word args)
+  (consecutive (lambda (backslash command-word closing args)
                  (declare (ignore backslash))
                  (make-instance '<command>
                                 :name (contents command-word)
+                                :is-closing (not (null closing))
                                 :args args))
                'backslash-parser
                'word-parser
+               (optional nil 'ratio-parser)
                (repeat* 'pass-args
                         'tex-command-argument-parser)))
 
