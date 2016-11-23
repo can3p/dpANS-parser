@@ -101,8 +101,8 @@
     :contents
     (with-output-to-string (string-stream)
       (loop for char = (read-char stream nil nil)
-	    while (eql char #\Newline)
-	    do (write-char char string-stream)
+	    while (or (eql char #\Newline) (whitespace-p char))
+            do (when (eql char #\Newline) (write-char char string-stream))
 	    finally (maybe-unread-char char stream)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
