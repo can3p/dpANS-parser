@@ -94,7 +94,7 @@
   (consecutive (lambda (backslash command-word closing args)
                  (declare (ignore backslash))
                  (make-instance '<command>
-                                :name (contents command-word)
+                                :name (string-downcase (contents command-word))
                                 :is-closing (not (null closing))
                                 :args args))
                'backslash-parser
