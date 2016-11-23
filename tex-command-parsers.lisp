@@ -1,21 +1,5 @@
 (cl:in-package #:dpans-parser)
 
-;; Text = WHITESPACE | BLOCK
-
-;; WHITESPACE = ' ' | NEW_LINE | COMMENT
-
-;; COMMENT = NEW_LINE? '%' Not(NEW_LINE) NEW_LINE
-
-;; BLOCK = (BLOCK_OPERATOR | TEXT) ((NEW_LINE NEW_LINE) | EOF)
-
-;; BLOCK_OPERATOR = NEW_LINE? OPERATOR NEW_LINE
-
-;; OPERATOR = "\\" WORD '%'? OPERATOR_ARGUMENT+
-
-;; OPERATOR_ARGUMENT = "{" [^}]+ "}"
-
-;; TEXT = ((WORD | OPERATOR) WHITESPACE*)
-
 (defun pass-args (&rest args) args)
 (defun flatten-args (&rest args)
   (apply #'concatenate 'list args))
