@@ -24,6 +24,12 @@
   (declare (ignore args))
   first)
 
+(defun start-argument-p (token)
+  (and (typep token 'punctuation) (string= (contents token) "{")))
+
+(defun end-argument-p (token)
+  (and (typep token 'punctuation) (string= (contents token) "}")))
+
 (defclass <file> ()
   (
    (contents :initarg :contents :initform nil :reader contents)
@@ -121,13 +127,22 @@
                'end-argument-parser))
 
 (define-parser tex-command-argument-inner-parser
-  (repeat* 'flatten-args
-           (consecutive 'flatten-args
-                        (repeat+ 'pass-args
-                                 (alternative 'word-parser
-                                              (narrow (lambda (punctuation) (not (string= (contents punctuation) "}"))) 'punctuation-parser)))
-                        (repeat* 'pass-args
-                                 (alternative 'whitespace-parser 'single-newline-parser)))))
+  (lambda (tokens)
+    (let ((results '())
+          (br-count 0))
+	    (loop with remaining-tokens = tokens
+            do (let ((first-token (car remaining-tokens)))
+                 (when (start-argument-p first-token)
+                   (incf br-count))
+                 (when (and (end-argument-p first-token) (= 0 br-count))
+                   (return (values (not (null results))
+                                   (reverse results)
+                                   remaining-tokens)))
+                 (when (end-argument-p first-token)
+                   (decf br-count))
+
+                 (progn (setf remaining-tokens (cdr remaining-tokens))
+                        (push first-token results)))))))
 
 (define-parser word-parser
   (singleton #'identity #'identifierp))
