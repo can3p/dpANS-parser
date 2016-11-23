@@ -62,10 +62,7 @@
                  (declare (ignore _))
                  (make-instance '<file>
                                 :contents contents))
-               (repeat+ (lambda (&rest r)
-                          (declare (ignore r))
-                          nil)
-                        (alternative 'single-newline-parser 'multiple-newline-parser))
+               (optional nil 'block-terminator-parser)
                (repeat+ 'pass-args
                         'block-parser)))
 
@@ -79,7 +76,11 @@
 
 (define-parser block-terminator-parser
   (repeat+ 'pass-args
-           (alternative 'multiple-newline-parser 'single-newline-parser)))
+           (consecutive 'pass-args
+                        (optional nil 'whitespace-parser)
+                        (alternative 'multiple-newline-parser 'single-newline-parser)
+                        (optional nil 'whitespace-parser)
+                        )))
 
 (define-parser text-element-parser
   (alternative 'word-parser
