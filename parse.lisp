@@ -34,9 +34,12 @@
                             ))
 
 (defun test (&optional file)
-  (with-open-file (in (or file (merge-pathnames #p"dpans/concept-arrays-mod.tex" (asdf:system-source-file :parse-lisp-spec))))
-    (let ((tokens (tokenize-stream in)))
-      (file-parser tokens))))
+  (let ((fname (make-pathname :directory '(:relative "dpans")
+                              :name (or file "concept-arrays") :type "tex"))
+        (asdf-location (asdf:system-source-file :parse-lisp-spec)))
+    (with-open-file (in (merge-pathnames fname asdf-location))
+      (let ((tokens (tokenize-stream in)))
+        (file-parser tokens)))))
 
 (defun test-string ()
   (tex-command-parser (tokenize-string "\\term{List element}")))
