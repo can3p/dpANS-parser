@@ -14,15 +14,6 @@
 (defun end-argument-p (token)
   (and (typep token 'punctuation) (string= (contents token) "}")))
 
-(defclass <file> ()
-  (
-   (contents :initarg :contents :initform nil :reader contents)
-   ))
-
-(defmethod print-object ((instance <file>) stream)
-  (format stream "<file>~%File contents:~a~%"
-          (contents instance)))
-
 (defclass <text-block> ()
   (
    (contents :initarg :contents :initform nil :reader contents)
@@ -50,8 +41,7 @@
 (define-parser file-parser
   (consecutive (lambda (_ contents)
                  (declare (ignore _))
-                 (make-instance '<file>
-                                :contents contents))
+                 contents)
                (optional nil 'block-terminator-parser)
                (repeat+ 'pass-args
                         'block-parser)))
