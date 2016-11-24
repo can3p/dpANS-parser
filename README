@@ -1,3 +1,5 @@
+## Original readme
+
 This software has a very specific purpose, namely to parse the draft
 proposed American National Standard (dpANS) for the programming
 language Common Lisp.
@@ -62,3 +64,42 @@ Next, we intend to work on the following aspect:
 
   We plan to use the framework for combinatory parsing in order to
   define elementary parsers for easily-recognizable markup macros.  
+
+----
+
+## Current Status
+
+General idea is to generate object tree that represents a spec
+and print it out as an xml, so that we can convert it later to
+whatever format we find more interesting
+
+Since we have commands, let's execute them
+
+\input commands should be executed during parse time
+So, as a result from parsing we're getting a long stream
+that consists of commands and text blocks which can contains sentences and
+other commands.
+
+Commands can be of several types:
+
+* Ones that create structural element like \beginsubsection (start structure command)
+* Ones that mark the ending of current structural element like \endsubsection (end structure command)
+* Ones that define variables that can be used later (definition command)
+* Ones that actually generate markup. This sort of commands can be encountered inside of text blocks (inline command)
+
+So, logic should be like following:
+
+1. Create root level document and mark it as a current element
+2. Read next element from parsed stream. If nothing is left, we're done, exit
+3.a If text block process text block and add it as a child to current element
+3.b if start structure command create relevant element add it to the current and mark as current
+3.c If end structure command close current element and make it's parrent current element
+3.d If definition command assign relevant variable as a document property.
+4. Goto 2
+
+Here is how wwe parse a text block:
+
+2. Read next element from parsed stream. If nothing is left, we're done, exit
+3.a If it's a new line - discard and go to step 2
+3.b If it's not a command - read stream until we get a command and make it a string. Then go to step 2
+3.c If it's a command - run relevant command and append result to a text
