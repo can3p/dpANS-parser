@@ -7,4 +7,7 @@
    (:file "read-token")
    (:file "combinatory-parsing")
    (:file "parse")
-   (:file "tex-command-parsers")))
+   (:file "tex-command-parsers")
+   (:file "document")
+   (:file "print-xml")
+   ))
