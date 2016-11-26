@@ -27,8 +27,8 @@
     (format t "~a<~a title=~S>~%"
             pad (name element) (title element))
     (print-children element indent)
-    (format t "~a</~a title=~S>~%"
-            pad (name element) (title element))))
+    (format t "~a</~a>~%"
+            pad (name element))))
 
 (defmethod print-xml ((element <paragraph>) &optional (indent 0))
     (let ((pad (make-indent indent)))
