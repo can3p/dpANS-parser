@@ -29,6 +29,12 @@
     (setf *document* document)
     (setf *current-element* document)))
 
+(defun create-document-from-stream (stream)
+  (reset-document)
+  (loop for command in stream
+        do (run-command (name command) (args command)))
+  *document*)
+
 (defun add-child (element)
   (setf (parent element) *current-element*)
   (setf (children *current-element*) (cons element (children *current-element*))))

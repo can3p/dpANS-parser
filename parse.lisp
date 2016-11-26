@@ -42,4 +42,14 @@
         (file-parser tokens)))))
 
 (defun test-string ()
-  (tex-command-parser (tokenize-string "\\term{List element}")))
+  (file-parser (tokenize-string "\\beginsubsection{List element}
+")))
+
+(defun test-create-document ()
+  (multiple-value-bind (successp stream)
+      (file-parser (tokenize-string "\\beginsubsection{List element}
+"))
+    ()
+    (if successp
+        (print-xml (create-document-from-stream stream))
+        "failed to parse stream")))
