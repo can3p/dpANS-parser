@@ -9,5 +9,6 @@
    (:file "parse")
    (:file "tex-command-parsers")
    (:file "document")
+   (:file "commands")
    (:file "print-xml")
    ))
