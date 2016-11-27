@@ -53,3 +53,14 @@
     (if successp
         (print-xml (create-document-from-stream stream))
         "failed to parse stream")))
+
+(defun test-create-document-from-file (&optional file)
+  (let ((fname (make-pathname :directory '(:relative "dpans")
+                              :name (or file "concept-arrays") :type "tex"))
+        (asdf-location (asdf:system-source-file :dpans-parser)))
+    (with-open-file (in (merge-pathnames fname asdf-location))
+      (let ((tokens (tokenize-stream in)))
+        (multiple-value-bind (successp stream) (file-parser tokens)
+          (if successp
+              (print-xml (create-document-from-stream stream))
+              "failed to parse stream"))))))
