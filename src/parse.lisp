@@ -36,7 +36,7 @@
 (defun test (&optional file)
   (let ((fname (make-pathname :directory '(:relative "dpans")
                               :name (or file "concept-arrays") :type "tex"))
-        (asdf-location (asdf:system-source-file :parse-lisp-spec)))
+        (asdf-location (asdf:system-source-file :dpans-parser)))
     (with-open-file (in (merge-pathnames fname asdf-location))
       (let ((tokens (tokenize-stream in)))
         (file-parser tokens)))))
