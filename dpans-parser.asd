@@ -2,13 +2,15 @@
 
 (asdf:defsystem #:dpans-parser
   :serial t
-  :components
-  ((:file "packages")
-   (:file "read-token")
-   (:file "combinatory-parsing")
-   (:file "parse")
-   (:file "tex-command-parsers")
-   (:file "document")
-   (:file "commands")
-   (:file "print-xml")
-   ))
+  :components ((:module "src"
+                :components
+                (
+                 (:file "packages")
+                 (:file "read-token")
+                 (:file "combinatory-parsing")
+                 (:file "parse")
+                 (:file "tex-command-parsers")
+                 (:file "document")
+                 (:file "commands")
+                 (:file "print-xml")
+                 ))))
