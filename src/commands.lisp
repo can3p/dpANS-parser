@@ -42,3 +42,6 @@
   (add-child-and-enter (make-instance '<block-element>
                                       :name "subsubsection"
                                       :title title)))
+
+(defcommand definesection ((name string))
+  (mark-as-section name))

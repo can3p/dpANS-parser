@@ -20,6 +20,7 @@
 (defclass <document> (<block-element>)
   (
    (props :initarg :props :initform nil :reader props)
+   (sections :initform (make-hash-table :test 'equal) :reader sections)
    ))
 
 (defclass <paragraph> (<block-element>) ())
@@ -55,6 +56,9 @@
            element-title))
 
   (setf *current-element* (parent *current-element*)))
+
+(defun mark-as-section (name)
+  (setf (gethash name *document*) *current-element*))
 
 ;; (defmethod print-object ((instance <command>) stream)
 ;;   (let ((status (if (is-closing instance) "CLOSE" "OPEN")))
