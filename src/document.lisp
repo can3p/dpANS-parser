@@ -58,7 +58,7 @@
   (setf *current-element* (parent *current-element*)))
 
 (defun mark-as-section (name)
-  (setf (gethash name *document*) *current-element*))
+  (setf (gethash name (sections *document*)) *current-element*))
 
 ;; (defmethod print-object ((instance <command>) stream)
 ;;   (let ((status (if (is-closing instance) "CLOSE" "OPEN")))
