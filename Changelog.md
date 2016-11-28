@@ -1,5 +1,6 @@
 # Changes
 
+* 2016-11-28 print-xml now supports stream
 * 2016-11-28 \defineSection command support
 * 2016-11-28 Test subsystem
 * 2016-11-27 To make things easier, dpANS sources are now a part of the repo

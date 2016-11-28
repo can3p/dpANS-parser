@@ -51,7 +51,7 @@
 "))
     ()
     (if successp
-        (print-xml (create-document-from-stream stream))
+        (print-xml t (create-document-from-stream stream))
         "failed to parse stream")))
 
 (defun test-create-document-from-file (&optional file)
@@ -62,5 +62,5 @@
       (let ((tokens (tokenize-stream in)))
         (multiple-value-bind (successp stream) (file-parser tokens)
           (if successp
-              (print-xml (create-document-from-stream stream))
+              (print-xml t (create-document-from-stream stream))
               "failed to parse stream"))))))

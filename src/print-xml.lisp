@@ -5,32 +5,32 @@
   (if (= indent 0) ""
       (concatenate 'string " " (make-indent (- indent 1)))))
 
-(defun print-children (element indent)
+(defun print-children (stream element indent)
   (when (> (length (children element)) 0)
     (loop with new-indent = (+ 2 indent)
           for child in (children element)
-          do (print-xml child new-indent))))
+          do (print-xml stream child new-indent))))
 
-(defgeneric print-xml (element &optional indent))
+(defgeneric print-xml (stream element &optional indent))
 
-(defmethod print-xml ((element <element>) &optional (indent 0))
+(defmethod print-xml (stream (element <element>) &optional (indent 0))
   (declare (ignore indent))
   (error "<element> class should never be used for real element, try children"))
 
-(defmethod print-xml ((element <document>) &optional (indent 0))
-  (format t "<document>~%")
-  (print-children element indent)
-  (format t "</document>"))
+(defmethod print-xml (stream (element <document>) &optional (indent 0))
+  (format stream "<document>~%")
+  (print-children stream element indent)
+  (format stream "</document>"))
 
-(defmethod print-xml ((element <block-element>) &optional (indent 0))
+(defmethod print-xml (stream (element <block-element>) &optional (indent 0))
   (let ((pad (make-indent indent)))
-    (format t "~a<~a title=~S>~%"
+    (format stream "~a<~a title=~S>~%"
             pad (name element) (title element))
-    (print-children element indent)
-    (format t "~a</~a>~%"
+    (print-children stream element indent)
+    (format stream "~a</~a>~%"
             pad (name element))))
 
-(defmethod print-xml ((element <paragraph>) &optional (indent 0))
+(defmethod print-xml (stream (element <paragraph>) &optional (indent 0))
     (let ((pad (make-indent indent)))
-      (format t "~a<paragraph>~a</paragraph>~%"
+      (format stream "~a<paragraph>~a</paragraph>~%"
               pad (apply #'concatenate 'string (children element)))))
