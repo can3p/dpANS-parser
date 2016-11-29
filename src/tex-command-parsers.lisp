@@ -14,15 +14,6 @@
 (defun end-argument-p (token)
   (and (typep token 'punctuation) (string= (contents token) "}")))
 
-(defclass <text-block> ()
-  (
-   (contents :initarg :contents :initform nil :reader contents)
-   ))
-
-(defmethod print-object ((instance <text-block>) stream)
-  (format stream "<text-block>~%Text Block contents:~a~%"
-          (contents instance)))
-
 (defclass <command> ()
     (
      (is-closing :initarg :is-closing :initform nil :reader is-closing)
@@ -71,8 +62,9 @@
 
 (define-parser text-parser
   (consecutive (lambda (first second rest)
-                 (make-instance '<text-block>
-                                :contents (cons first (cons second rest))))
+                 (make-instance '<command>
+                                :name "text-block"
+                                :args (cons first (cons second rest))))
                (alternative 'word-parser 'tex-command-parser)
                'text-element-parser
                (repeat+ #'list 'text-element-parser)))
