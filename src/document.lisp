@@ -14,7 +14,7 @@
    (children :initarg :children :initform nil :accessor children)
    ))
 
-(defclass <container-block-element> (<element>)
+(defclass <container-block-element> (<block-element>)
   (
    (name :initarg :name :initform nil :reader name)
    (title :initarg :title :initform nil :reader title)
