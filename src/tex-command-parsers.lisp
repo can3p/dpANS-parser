@@ -64,7 +64,7 @@
   (consecutive (lambda (first second rest)
                  (make-instance '<command>
                                 :name "text-block"
-                                :args (cons first (cons second rest))))
+                                :args (list (cons first (cons second rest)))))
                (alternative 'word-parser 'tex-command-parser)
                'text-element-parser
                (repeat+ #'list 'text-element-parser)))
