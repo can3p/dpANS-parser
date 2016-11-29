@@ -11,9 +11,13 @@
 
 (defclass <block-element> (<element>)
   (
+   (children :initarg :children :initform nil :accessor children)
+   ))
+
+(defclass <container-block-element> (<element>)
+  (
    (name :initarg :name :initform nil :reader name)
    (title :initarg :title :initform nil :reader title)
-   (children :initarg :children :initform nil :accessor children)
    ))
 
 

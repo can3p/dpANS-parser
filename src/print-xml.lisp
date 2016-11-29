@@ -22,7 +22,7 @@
   (print-children stream element indent)
   (format stream "</document>"))
 
-(defmethod print-xml (stream (element <block-element>) &optional (indent 0))
+(defmethod print-xml (stream (element <container-block-element>) &optional (indent 0))
   (let ((pad (make-indent indent)))
     (format stream "~a<~a title=~S>~%"
             pad (name element) (title element))

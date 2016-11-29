@@ -39,7 +39,7 @@
 
 
 (defcommand beginsubsection ((title string))
-  (add-child-and-enter (make-instance '<block-element>
+  (add-child-and-enter (make-instance '<container-block-element>
                                       :name "subsection"
                                       :title title)))
 
