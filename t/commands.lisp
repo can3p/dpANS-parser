@@ -53,11 +53,52 @@ This is a \\term{term test} sentence.
   (progn
     (ok successp "Document parsed successfully")
     (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <paragraph>This is a <link term=\"term test\">term test</link> sentence.</paragraph>
+</document>")
+      )))
+
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
+\\beginSection{First section}
+\\beginSubSection{First sub section}
+\\beginSubSubSection{First sub sub section}
+\\beginSubSubsubsection{First sub sub sub section}
+\\beginSubSubsubsubsection{First sub sub sub sub section}
+
+I am there to check that we actually get that deep.
+
+\\endSubSubsubsubsection%{First sub sub sub sub section}
+\\endSubSubsubsection%{First sub sub sub section}
+\\endSubSubSection%{First sub sub section}
+\\endSubSection%{First sub section}
+\\endSection%{First section}
+
+I am there just to check that we actually come back to document.
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
           (document (dpans-parser::create-document-from-stream stream))
           (s (make-string-output-stream)))
       (dpans-parser::print-xml s document)
       (is (get-output-stream-string s) "<document>
-  <paragraph>This is a <link term=\"term test\">term test</link> sentence.</paragraph>
+  <section title=\"First section\">
+    <subsection title=\"First sub section\">
+      <subsubsection title=\"First sub sub section\">
+        <subsubsubsection title=\"First sub sub sub section\">
+          <subsubsubsubsection title=\"First sub sub sub sub section\">
+            <paragraph>I am there to check that we actually get that deep.</paragraph>
+          </subsubsubsubsection>
+        </subsubsubsection>
+      </subsubsection>
+    </subsection>
+  </section>
+  <paragraph>I am there just to check that we actually come back to document.</paragraph>
 </document>")
       )))
 

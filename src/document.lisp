@@ -49,7 +49,7 @@
 
 (defun add-child (element)
   (setf (parent element) *current-element*)
-  (setf (children *current-element*) (cons element (children *current-element*))))
+  (setf (children *current-element*) (reverse (cons element (reverse (children *current-element*))))))
 
 (defun add-child-and-enter (element)
   (add-child element)

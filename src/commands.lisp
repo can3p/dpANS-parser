@@ -57,10 +57,45 @@
       (flush-accumulator)
       (reverse nodes))))
 
+(defcommand beginsection ((title string))
+  (add-child-and-enter (make-instance '<container-block-element>
+                                      :name "section"
+                                      :title title)))
+
 (defcommand beginsubsection ((title string))
   (add-child-and-enter (make-instance '<container-block-element>
                                       :name "subsection"
                                       :title title)))
+
+(defcommand beginsubsubsection ((title string))
+  (add-child-and-enter (make-instance '<container-block-element>
+                                      :name "subsubsection"
+                                      :title title)))
+
+(defcommand beginsubsubsubsection ((title string))
+  (add-child-and-enter (make-instance '<container-block-element>
+                                      :name "subsubsubsection"
+                                      :title title)))
+
+(defcommand beginsubsubsubsubsection ((title string))
+  (add-child-and-enter (make-instance '<container-block-element>
+                                      :name "subsubsubsubsection"
+                                      :title title)))
+
+(defcommand endsection ((title string))
+  (close-child-and-go-up "section" title))
+
+(defcommand endsubsection ((title string))
+  (close-child-and-go-up "subsection" title))
+
+(defcommand endsubsubsection ((title string))
+  (close-child-and-go-up "subsubsection" title))
+
+(defcommand endsubsubsubsection ((title string))
+  (close-child-and-go-up "subsubsubsection" title))
+
+(defcommand endsubsubsubsubsection ((title string))
+  (close-child-and-go-up "subsubsubsubsection" title))
 
 (defcommand definesection ((name string))
   (mark-as-section name))
