@@ -58,7 +58,7 @@
                  ((typep token '<command>) (add-command token))
                  (t (error "Unknown token inside of text block ~a" token))))
       (flush-accumulator)
-      nodes)))
+      (reverse nodes))))
 
 (defcommand beginsubsection ((title string))
   (add-child-and-enter (make-instance '<container-block-element>
@@ -71,3 +71,8 @@
 (defcommand text-block ((contents text-block))
   (add-child (make-instance '<paragraph>
                             :children contents)))
+
+(defcommand term ((term string))
+  (make-instance '<term>
+                 :term term
+                 :text term))

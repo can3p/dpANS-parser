@@ -1,5 +1,6 @@
 # Changes
 
+* 2016-11-30 \term command
 * 2016-11-30 Basic parsing for text blocks
 * 2016-11-28 print-xml now supports stream
 * 2016-11-28 \defineSection command support

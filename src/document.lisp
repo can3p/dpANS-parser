@@ -9,6 +9,13 @@
    (parent :initarg :parent :initform nil :accessor parent)
    ))
 
+(defclass <link> (<element>) ())
+
+(defclass <term> (<link>)
+  (
+   (term :initarg :term :initform nil :reader term)
+   (text :initarg :text :initform nil :reader text)))
+
 (defclass <block-element> (<element>)
   (
    (children :initarg :children :initform nil :accessor children)

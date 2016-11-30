@@ -39,3 +39,7 @@
 (defmethod print-xml (stream (element string) &optional (indent 0))
   (declare (ignore indent))
   (format stream "~a" element))
+
+(defmethod print-xml (stream (element <term>) &optional (indent 0))
+  (declare (ignore indent))
+  (format stream "<link term=~s>~a</link>" (term element) (text element)))
