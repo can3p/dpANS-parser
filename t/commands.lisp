@@ -63,6 +63,22 @@ This is a \\term{term test} and \\newterm{new term test} sentence.
 
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
+This is a \\seevar{var-name} and \\varref{ref-var-name} and \\funref{fun-name} and \\seefuns{see-fun-name}.
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <paragraph>This is a <link var=\"var-name\" /> and <link var=\"ref-var-name\" /> and <link fun=\"fun-name\" /> and <link fun=\"see-fun-name\" />.</paragraph>
+</document>")
+      )))
+
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
 This is a \\issue{SOMETHING:BIG}issue test\\endissue{SOMETHING:BIG} sentence.
 
 "))

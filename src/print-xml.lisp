@@ -47,3 +47,19 @@
 (defmethod print-xml (stream (element <new-term>) &optional (indent 0))
   (declare (ignore indent))
   (format stream "<link new-term=~s>~a</link>" (term element) (text element)))
+
+(defmethod print-xml (stream (element <seevar>) &optional (indent 0))
+  (declare (ignore indent))
+  (format stream "<link var=~s />" (name element)))
+
+(defmethod print-xml (stream (element <seefuns>) &optional (indent 0))
+  (declare (ignore indent))
+  (format stream "<link fun=~s />" (name element)))
+
+(defmethod print-xml (stream (element <funref>) &optional (indent 0))
+  (declare (ignore indent))
+  (format stream "<link fun=~s />" (name element)))
+
+(defmethod print-xml (stream (element <varref>) &optional (indent 0))
+  (declare (ignore indent))
+  (format stream "<link var=~s />" (name element)))

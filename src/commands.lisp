@@ -114,6 +114,22 @@
                  :term term
                  :text term))
 
+(defcommand seevar ((name string))
+  (make-instance '<seevar>
+                 :name name))
+
+(defcommand seefuns ((name string))
+  (make-instance '<seefuns>
+                 :name name))
+
+(defcommand funref ((name string))
+  (make-instance '<funref>
+                 :name name))
+
+(defcommand varref ((name string))
+  (make-instance '<varref>
+                 :name name))
+
 ;; we deliberately don't do anything with issues for now
 (defcommand issue ((term string))
   (declare (ignore term))

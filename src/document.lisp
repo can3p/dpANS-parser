@@ -11,6 +11,26 @@
 
 (defclass <link> (<element>) ())
 
+(defclass <seevar> (<link>)
+  (
+   (name :initarg :name :initform nil :reader name)
+   ))
+
+(defclass <seefuns> (<link>)
+  (
+   (name :initarg :name :initform nil :reader name)
+   ))
+
+(defclass <funref> (<link>)
+  (
+   (name :initarg :name :initform nil :reader name)
+   ))
+
+(defclass <varref> (<link>)
+  (
+   (name :initarg :name :initform nil :reader name)
+   ))
+
 (defclass <term> (<link>)
   (
    (term :initarg :term :initform nil :reader term)
