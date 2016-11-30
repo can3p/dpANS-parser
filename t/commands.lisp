@@ -63,6 +63,22 @@ This is a \\term{term test} sentence.
 
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
+This is a \\issue{SOMETHING:BIG}issue test\\endissue{SOMETHING:BIG} sentence.
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <paragraph>This is a issue test sentence.</paragraph>
+</document>")
+      )))
+
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
 \\beginSection{First section}
 \\beginSubSection{First sub section}
 \\beginSubSubSection{First sub sub section}

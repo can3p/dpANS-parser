@@ -108,3 +108,12 @@
   (make-instance '<term>
                  :term term
                  :text term))
+
+;; we deliberately don't do anything with issues for now
+(defcommand issue ((term string))
+  (declare (ignore term))
+  nil)
+
+(defcommand endissue ((term string))
+  (declare (ignore term))
+  nil)
