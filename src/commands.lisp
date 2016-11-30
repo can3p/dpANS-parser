@@ -31,9 +31,6 @@
       (error "command with a name ~s is not defined" name)))
 
 
-(defcommand-argparser list->string
-  (apply #'concatenate 'string argument))
-
 (defcommand-argparser string
   (apply #'concatenate 'string (mapcar #'contents argument)))
 
