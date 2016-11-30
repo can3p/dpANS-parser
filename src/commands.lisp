@@ -37,6 +37,28 @@
 (defcommand-argparser string
   (apply #'concatenate 'string (mapcar #'contents argument)))
 
+(defcommand-argparser text-block
+  (let ((nodes '())
+        (accumulator '()))
+    (labels ((flush-accumulator ()
+               (when (not (null accumulator))
+                 (push (apply #'concatenate 'string (reverse accumulator)) nodes)
+                 (setf accumulator '())))
+             (add-command (command)
+               (flush-accumulator)
+               (let ((result (run-command (name command) (args command))))
+                 (if (not (null result))
+                     (push result nodes))))
+             (add-string (token)
+               (push (contents token) accumulator)))
+
+      (loop for token in argument
+            do (cond
+                 ((typep token 'token) (add-string token))
+                 ((typep token '<command>) (add-command token))
+                 (t (error "Unknown token inside of text block ~a" token))))
+      (flush-accumulator)
+      nodes)))
 
 (defcommand beginsubsection ((title string))
   (add-child-and-enter (make-instance '<container-block-element>
@@ -45,3 +67,7 @@
 
 (defcommand definesection ((name string))
   (mark-as-section name))
+
+(defcommand text-block ((contents text-block))
+  (add-child (make-instance '<paragraph>
+                            :children contents)))

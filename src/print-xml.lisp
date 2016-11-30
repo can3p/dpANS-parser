@@ -31,6 +31,11 @@
             pad (name element))))
 
 (defmethod print-xml (stream (element <paragraph>) &optional (indent 0))
-    (let ((pad (make-indent indent)))
-      (format stream "~a<paragraph>~a</paragraph>~%"
-              pad (apply #'concatenate 'string (children element)))))
+  (let ((pad (make-indent indent)))
+    (format stream "~a<paragraph>" pad)
+    (print-children stream element indent)
+    (format stream "</paragraph>~%")))
+
+(defmethod print-xml (stream (element string) &optional (indent 0))
+  (declare (ignore indent))
+  (format stream "~a" element))
