@@ -8,6 +8,10 @@
   (declare (ignore args))
   first)
 
+(defun pass-second (first second &rest args)
+  (declare (ignore first args))
+  second)
+
 (defun start-argument-p (token)
   (and (typep token 'punctuation) (string= (contents token) "{")))
 
@@ -110,6 +114,25 @@
                  (progn (setf remaining-tokens (cdr remaining-tokens))
                         (push first-token results)))))))
 
+(define-parser tex-displaythree-argument-parser
+  (consecutive 'pass-second
+               (optional nil 'single-newline-parser)
+               (repeat+ 'pass-args
+                        (consecutive 'pass-first
+                                     'tex-displaythree-func-name-parser
+                                     'tex-displaythree-func-separator-parser))))
+
+(define-parser tex-displaythree-func-name-parser
+  (consecutive 'pass-args
+               'word-parser
+               (optional nil 'tt-parser)))
+
+(define-parser tex-displaythree-func-separator-parser
+  (repeat+ 'pass-args (alternative 'amp-parser
+                                   (consecutive 'pass-args
+                                                'cr-parser
+                                                'single-newline-parser))))
+
 (define-parser word-parser
   (singleton #'identity #'identifierp))
 
@@ -150,7 +173,40 @@
   (narrow (lambda (punctuation) (string= (contents punctuation) "}"))
           'punctuation-parser))
 
+(define-parser non-end-argument-parser
+  (singleton #'identity
+             (lambda (token)
+               (string/= (contents token) "}"))))
+
+(define-parser amp-parser
+  (narrow (lambda (punctuation) (string= (contents punctuation) "&"))
+          'punctuation-parser))
+
+(define-parser dash-parser
+  (narrow (lambda (punctuation) (string= (contents punctuation) "-"))
+          'punctuation-parser))
+
 (define-parser ratio-parser
   (narrow (lambda (punctuation) (string= (contents punctuation) "%"))
           'punctuation-parser))
+
+(define-parser cr-parser
+  (consecutive #'pass-args
+               'backslash-parser
+               (narrow (lambda (w) (string= (contents w) "cr"))
+                       'word-parser)))
+
+(define-parser tt-parser
+  (consecutive #'(lambda (&rest rest)
+                   (make-instance '<command>
+                                  :name "tt"
+                                  :args (cadr (cdddr rest))))
+               'start-argument-parser
+               'backslash-parser
+               (narrow (lambda (w) (string= (contents w) "tt"))
+                       'word-parser)
+               (repeat+ 'pass-args 'whitespace-parser)
+               (repeat+ 'pass-args
+                        'non-end-argument-parser)
+               'end-argument-parser))
 

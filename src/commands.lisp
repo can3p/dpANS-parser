@@ -57,6 +57,31 @@
       (flush-accumulator)
       (reverse nodes))))
 
+(defcommand-argparser displaythree-list
+  (labels ((cast-elem (token)
+             (cond
+               ((typep token 'token) (contents token))
+               ((null token) "")
+               ((and (typep token '<command>)
+                     (string= (name token) "tt"))
+                (cast-list (args token))
+               )))
+           (cast-list (list)
+             (apply #'concatenate 'string
+                    (mapcar #'cast-elem list)))
+           (create-func (name)
+             (make-instance '<displaythree-func>
+                            :name name))
+           )
+  (multiple-value-bind (successp arguments rest) (tex-displaythree-argument-parser argument)
+    (progn
+      (when (not successp)
+        (error "Unable to parse second argument for displaythree command"))
+      (when (> (length rest) 0)
+        (error "After successful parsing of sedond argument of display three command some trail of tokens remains which is ferbidden"))
+      (mapcar #'create-func
+              (mapcar #'cast-list arguments))))))
+
 (defcommand beginsection ((title string))
   (add-child-and-enter (make-instance '<container-block-element>
                                       :name "section"
@@ -150,3 +175,9 @@
 (defcommand ie () "i.e.")
 
 (defcommand thenextfigure () "The next figure")
+
+(defcommand displaythree ((title string) (contents displaythree-list))
+  (add-child (make-instance '<displaythree>
+                            :title title
+                            :children contents
+                            )))

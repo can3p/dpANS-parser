@@ -30,6 +30,19 @@
     (format stream "~a</~a>~%"
             pad (name element))))
 
+(defmethod print-xml (stream (element <displaythree>) &optional (indent 0))
+  (let ((pad (make-indent indent)))
+    (format stream "~a<displaythree title=~S>~%"
+            pad (title element))
+    (print-children stream element indent)
+    (format stream "~a</displaythree>~%"
+            pad)))
+
+(defmethod print-xml (stream (element <displaythree-func>) &optional (indent 0))
+  (let ((pad (make-indent indent)))
+    (format stream "~a<func name=~S />~%"
+            pad (name element))))
+
 (defmethod print-xml (stream (element <paragraph>) &optional (indent 0))
   (let ((pad (make-indent indent)))
     (format stream "~a<paragraph>" pad)

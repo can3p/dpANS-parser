@@ -53,6 +53,16 @@
    (children :initarg :children :initform nil :accessor children)
    ))
 
+(defclass <displaythree> (<block-element>)
+  (
+   (title :initarg :title :initform nil :reader title)
+   ))
+
+(defclass <displaythree-func> (<element>)
+  (
+   (name :initarg :name :initform nil :reader name)
+   ))
+
 (defclass <container-block-element> (<block-element>)
   (
    (name :initarg :name :initform nil :reader name)

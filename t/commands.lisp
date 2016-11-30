@@ -134,4 +134,30 @@ I am there just to check that we actually come back to document.
 </document>")
       )))
 
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
+\\displaythree{Beautiful table}{
+some-func&other-func&third-func\\cr
+row-some-func&row-other-func&row-third-func{\\tt <=}\\cr
+}
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <displaythree title=\"Beautiful table\">
+    <func name=\"some-func\" />
+    <func name=\"other-func\" />
+    <func name=\"third-func\" />
+    <func name=\"row-some-func\" />
+    <func name=\"row-other-func\" />
+    <func name=\"row-third-func<=\" />
+  </displaythree>
+</document>")
+      )))
+
 (finalize)
