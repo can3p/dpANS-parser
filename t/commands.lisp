@@ -31,7 +31,7 @@
 
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
-This is a test sentence.
+This is \\ie a test sentence.
 
 "))
   (progn
@@ -41,7 +41,7 @@ This is a test sentence.
            (s (make-string-output-stream)))
       (dpans-parser::print-xml s document)
       (is (get-output-stream-string s) "<document>
-  <paragraph>This is a test sentence.</paragraph>
+  <paragraph>This is i.e. a test sentence.</paragraph>
 </document>")
       )))
 

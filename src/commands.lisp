@@ -138,3 +138,5 @@
 (defcommand endissue ((term string))
   (declare (ignore term))
   nil)
+
+(defcommand ie () "i.e.")

@@ -1,6 +1,6 @@
 # Changes
 
-* 2016-11-30 seevar, seefuns, varref and funref commands
+* 2016-11-30 seevar, seefuns, varref and funref, ie commands
 * 2016-11-30 issue and endissue command - noop for now, let's implement them whenever we actually render list of issues
 * 2016-11-30 \term, \newterm commands, begin/end subsubsubsubsubsubsubsection commands in bulk
 * 2016-11-30 Basic parsing for text blocks
