@@ -16,6 +16,8 @@
    (term :initarg :term :initform nil :reader term)
    (text :initarg :text :initform nil :reader text)))
 
+(defclass <new-term> (<term>) ())
+
 (defclass <block-element> (<element>)
   (
    (children :initarg :children :initform nil :accessor children)

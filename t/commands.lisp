@@ -47,7 +47,7 @@ This is a test sentence.
 
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
-This is a \\term{term test} sentence.
+This is a \\term{term test} and \\newterm{new term test} sentence.
 
 "))
   (progn
@@ -57,7 +57,7 @@ This is a \\term{term test} sentence.
            (s (make-string-output-stream)))
       (dpans-parser::print-xml s document)
       (is (get-output-stream-string s) "<document>
-  <paragraph>This is a <link term=\"term test\">term test</link> sentence.</paragraph>
+  <paragraph>This is a <link term=\"term test\">term test</link> and <link new-term=\"new term test\">new term test</link> sentence.</paragraph>
 </document>")
       )))
 

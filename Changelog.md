@@ -1,7 +1,7 @@
 # Changes
 
 * 2016-11-30 issue and endissue command - noop for now, let's implement them whenever we actually render list of issues
-* 2016-11-30 \term command, begin/end subsubsubsubsubsubsubsection commands in bulk
+* 2016-11-30 \term, \newterm commands, begin/end subsubsubsubsubsubsubsection commands in bulk
 * 2016-11-30 Basic parsing for text blocks
 * 2016-11-28 print-xml now supports stream
 * 2016-11-28 \defineSection command support

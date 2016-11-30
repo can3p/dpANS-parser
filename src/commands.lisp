@@ -109,6 +109,11 @@
                  :term term
                  :text term))
 
+(defcommand newterm ((term string))
+  (make-instance '<new-term>
+                 :term term
+                 :text term))
+
 ;; we deliberately don't do anything with issues for now
 (defcommand issue ((term string))
   (declare (ignore term))
