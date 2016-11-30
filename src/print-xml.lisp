@@ -63,3 +63,11 @@
 (defmethod print-xml (stream (element <varref>) &optional (indent 0))
   (declare (ignore indent))
   (format stream "<link var=~s />" (name element)))
+
+(defmethod print-xml (stream (element <typeref>) &optional (indent 0))
+  (declare (ignore indent))
+  (format stream "<link type=~s />" (name element)))
+
+(defmethod print-xml (stream (element <metavar>) &optional (indent 0))
+  (declare (ignore indent))
+  (format stream "<metavar var=~s />" (name element)))

@@ -9,6 +9,11 @@
    (parent :initarg :parent :initform nil :accessor parent)
    ))
 
+(defclass <metavar> (<element>)
+  (
+   (name :initarg :name :initform nil :reader name)
+   ))
+
 (defclass <link> (<element>) ())
 
 (defclass <seevar> (<link>)
@@ -27,6 +32,11 @@
    ))
 
 (defclass <varref> (<link>)
+  (
+   (name :initarg :name :initform nil :reader name)
+   ))
+
+(defclass <typeref> (<link>)
   (
    (name :initarg :name :initform nil :reader name)
    ))

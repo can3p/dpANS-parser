@@ -31,7 +31,7 @@
 
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
-This is \\ie a test sentence.
+This is \\ie a \\metavar{var-var} test sentence. \\Thenextfigure shows that.
 
 "))
   (progn
@@ -41,7 +41,7 @@ This is \\ie a test sentence.
            (s (make-string-output-stream)))
       (dpans-parser::print-xml s document)
       (is (get-output-stream-string s) "<document>
-  <paragraph>This is i.e. a test sentence.</paragraph>
+  <paragraph>This is i.e. a <metavar var=\"var-var\" /> test sentence. The next figure shows that.</paragraph>
 </document>")
       )))
 
@@ -63,7 +63,7 @@ This is a \\term{term test} and \\newterm{new term test} sentence.
 
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
-This is a \\seevar{var-name} and \\varref{ref-var-name} and \\funref{fun-name} and \\seefuns{see-fun-name}.
+This is a \\typeref{type-name} and \\seevar{var-name} and \\varref{ref-var-name} and \\funref{fun-name} and \\seefuns{see-fun-name}.
 
 "))
   (progn
@@ -73,7 +73,7 @@ This is a \\seevar{var-name} and \\varref{ref-var-name} and \\funref{fun-name} a
            (s (make-string-output-stream)))
       (dpans-parser::print-xml s document)
       (is (get-output-stream-string s) "<document>
-  <paragraph>This is a <link var=\"var-name\" /> and <link var=\"ref-var-name\" /> and <link fun=\"fun-name\" /> and <link fun=\"see-fun-name\" />.</paragraph>
+  <paragraph>This is a <link type=\"type-name\" /> and <link var=\"var-name\" /> and <link var=\"ref-var-name\" /> and <link fun=\"fun-name\" /> and <link fun=\"see-fun-name\" />.</paragraph>
 </document>")
       )))
 

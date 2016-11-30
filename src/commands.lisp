@@ -130,6 +130,14 @@
   (make-instance '<varref>
                  :name name))
 
+(defcommand typeref ((name string))
+  (make-instance '<typeref>
+                 :name name))
+
+(defcommand metavar ((name string))
+  (make-instance '<metavar>
+                 :name name))
+
 ;; we deliberately don't do anything with issues for now
 (defcommand issue ((term string))
   (declare (ignore term))
@@ -140,3 +148,5 @@
   nil)
 
 (defcommand ie () "i.e.")
+
+(defcommand thenextfigure () "The next figure")
