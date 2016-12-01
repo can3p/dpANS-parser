@@ -160,4 +160,36 @@ row-some-func&row-other-func&row-third-func{\\tt <=}\\cr
 </document>")
       )))
 
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
+\\Thefunction{some-useful-function} can be used for a lot of stuff.
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <paragraph>The <link term=\"function\">function</link> <link fun=\"some-useful-function\" /> can be used for a lot of stuff.</paragraph>
+</document>")
+      )))
+
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
+\\newtermidx{things}{thing} are \\oftype{thing}.
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <paragraph><link term=\"thing\">things</link> are of <link term=\"type\">type</link> <link type=\"thing\" />.</paragraph>
+</document>")
+      )))
+
 (finalize)

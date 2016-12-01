@@ -34,6 +34,8 @@
 (defcommand-argparser string
   (apply #'concatenate 'string (mapcar #'contents argument)))
 
+(defcommand-argparser noop argument)
+
 (defcommand-argparser text-block
   (let ((nodes '())
         (accumulator '()))
@@ -45,7 +47,10 @@
                (flush-accumulator)
                (let ((result (run-command (name command) (args command))))
                  (if (not (null result))
-                     (push result nodes))))
+                     (if (listp result)
+                         (loop for item in result
+                               do (push item nodes))
+                         (push result nodes)))))
              (add-string (token)
                (push (contents token) accumulator)))
 
@@ -134,6 +139,11 @@
                  :term term
                  :text term))
 
+(defcommand newtermidx ((text string) (term string))
+  (make-instance '<term>
+                 :term term
+                 :text text))
+
 (defcommand newterm ((term string))
   (make-instance '<new-term>
                  :term term
@@ -158,6 +168,18 @@
 (defcommand typeref ((name string))
   (make-instance '<typeref>
                  :name name))
+
+(defcommand oftype ((type noop))
+  (list "of "
+        (run-command "term" `((,(make-instance 'token :contents "type"))))
+        " "
+        (run-command "typeref" (list type))))
+
+(defcommand thefunction ((name noop))
+  (list "The "
+        (run-command "term" `((,(make-instance 'token :contents "function"))))
+        " "
+        (run-command "funref" (list name))))
 
 (defcommand metavar ((name string))
   (make-instance '<metavar>
