@@ -81,6 +81,14 @@
   (declare (ignore indent))
   (format stream "<link type=~s />" (name element)))
 
+(defmethod print-xml (stream (element <chapref>) &optional (indent 0))
+  (declare (ignore indent))
+  (let ((name (name element)))
+    (format stream "<link section=~s>~a</link>"
+            (name element)
+            (or (gethash name (props (document element)))
+                "I DO NOT EXIST AND WILL THROW ERROR IN THE FUTURE"))))
+
 (defmethod print-xml (stream (element <metavar>) &optional (indent 0))
   (declare (ignore indent))
   (format stream "<metavar var=~s />" (name element)))

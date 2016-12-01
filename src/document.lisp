@@ -7,39 +7,33 @@
 (defclass <element> ()
   (
    (parent :initarg :parent :initform nil :accessor parent)
+   (document :initform nil :accessor document)
    ))
+
+(defmethod initialize-instance :after ((element <element>) &key)
+  (setf (document element) *document*))
 
 (defclass <metavar> (<element>)
   (
    (name :initarg :name :initform nil :reader name)
    ))
 
-(defclass <link> (<element>) ())
-
-(defclass <seevar> (<link>)
+(defclass <link> (<element>)
   (
    (name :initarg :name :initform nil :reader name)
    ))
 
-(defclass <seefuns> (<link>)
-  (
-   (name :initarg :name :initform nil :reader name)
-   ))
+(defclass <seevar> (<link>) ())
 
-(defclass <funref> (<link>)
-  (
-   (name :initarg :name :initform nil :reader name)
-   ))
+(defclass <seefuns> (<link>) ())
 
-(defclass <varref> (<link>)
-  (
-   (name :initarg :name :initform nil :reader name)
-   ))
+(defclass <funref> (<link>) ())
 
-(defclass <typeref> (<link>)
-  (
-   (name :initarg :name :initform nil :reader name)
-   ))
+(defclass <varref> (<link>) ())
+
+(defclass <typeref> (<link>) ())
+
+(defclass <chapref> (<link>) ())
 
 (defclass <term> (<link>)
   (

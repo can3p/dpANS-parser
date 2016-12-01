@@ -179,6 +179,10 @@
   (make-instance '<typeref>
                  :name name))
 
+(defcommand chapref ((name string))
+  (make-instance '<chapref>
+                 :name name))
+
 (defcommand oftype ((type noop))
   (list "of "
         (run-command "term" `((,(make-instance 'token :contents "type"))))

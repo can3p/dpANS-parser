@@ -206,6 +206,27 @@ row-some-func&row-other-func&row-third-func{\\tt <=}\\cr
 </document>")
       )))
 
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
+See \\ChapRef\\NonExsiting
+
+\\def\\Section1{Section about things}
+
+See \\ChapRef\\Section1
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <paragraph>See <link section=\"NonExsiting\">I DO NOT EXIST AND WILL THROW ERROR IN THE FUTURE</link></paragraph>
+  <paragraph>See <link section=\"Section1\">Section about things</link></paragraph>
+</document>")
+      )))
+
 ;; formulas!
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
