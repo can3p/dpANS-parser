@@ -91,6 +91,17 @@
                         'tex-command-argument-parser)))
 
 (define-parser tex-command-argument-parser
+  (alternative 'tex-command-braced-argument-parser
+               'tex-command-commandlike-argument-parser))
+
+(define-parser tex-command-commandlike-argument-parser
+  (consecutive (lambda (backslash command-word)
+                 (declare (ignore backslash))
+                 `(,command-word))
+               'backslash-parser
+               'word-parser))
+
+(define-parser tex-command-braced-argument-parser
   (consecutive (lambda (start contents stop)
                  (declare (ignore start stop)) contents)
                'start-argument-parser

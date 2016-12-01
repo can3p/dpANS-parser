@@ -134,6 +134,9 @@
 (defcommand endsubsubsubsubsection ((title string))
   (close-child-and-go-up "subsubsubsubsection" title))
 
+(defcommand def ((name string) (value string))
+  (set-property name value))
+
 (defcommand definesection ((name string))
   (mark-as-section name))
 

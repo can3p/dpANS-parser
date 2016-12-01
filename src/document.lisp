@@ -72,7 +72,7 @@
 
 (defclass <document> (<block-element>)
   (
-   (props :initarg :props :initform nil :reader props)
+   (props :initform (make-hash-table :test 'equal) :reader props)
    (sections :initform (make-hash-table :test 'equal) :reader sections)
    ))
 
@@ -125,6 +125,9 @@
 
 (defun mark-as-section (name)
   (setf (gethash name (sections *document*)) *current-element*))
+
+(defun set-property (name value)
+  (setf (gethash name (props *document*)) value))
 
 ;; (defmethod print-object ((instance <command>) stream)
 ;;   (let ((status (if (is-closing instance) "CLOSE" "OPEN")))

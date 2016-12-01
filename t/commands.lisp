@@ -12,6 +12,20 @@
 
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
+\\def\\SomeProp{Cool text (inside)}%
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* ((document (dpans-parser::create-document-from-stream stream)))
+      (dpans-parser::print-xml t document)
+      (is (gethash "SomeProp" (dpans-parser::props document)) "Cool text (inside)")
+      (is (gethash "NonExistingProp" (dpans-parser::props document)) nil)
+      )
+    ))
+
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
 \\beginSubSection{Test Section}
 \\defineSection{abCdef}
 "))
