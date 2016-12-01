@@ -213,6 +213,10 @@
   (make-instance '<formula>
                  :children contents))
 
+(defcommand formula-sub ((contents formula-arg))
+  (make-instance '<formula-sub>
+                 :children contents))
+
 (defcommand formula-symbol ((symbol string))
   (make-instance '<formula-symbol>
                  :name symbol))

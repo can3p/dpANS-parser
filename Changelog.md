@@ -1,5 +1,7 @@
 # Changes
 
+* 2016-12-01 $A$ and $A\\sub b$ formula support
+* 2016-12-01 oftype, thefunction and newtermidx commands
 * 2016-11-30 displaythree command
 * 2016-11-30 seevar, seefuns, varref and funref, ie, thenextfigure, typeref, metavar commands
 * 2016-11-30 issue and endissue command - noop for now, let's implement them whenever we actually render list of issues

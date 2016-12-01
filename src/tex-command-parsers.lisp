@@ -146,7 +146,8 @@
                ))
 
 (define-parser formula-element-parser
-  (alternative 'formula-symbol-parser))
+  (alternative 'formula-symbol-parser
+               'formula-command-parser))
 
 (define-parser formula-symbol-parser
   (singleton (lambda (word)
@@ -154,6 +155,20 @@
                               :name "formula-symbol"
                               :args `((,word))))
              #'identifierp))
+
+(define-parser formula-command-parser
+  (consecutive (lambda (d command-word dd symbol)
+                 (declare (ignore d dd))
+                 (make-instance '<command>
+                                :name (concatenate 'string
+                                                   "formula-"
+                                                   (string-downcase (contents command-word)))
+                                :args `((,symbol))))
+               'backslash-parser
+               'word-parser
+               'whitespace-parser
+               'formula-element-parser
+               ))
 
 (define-parser word-parser
   (singleton #'identity #'identifierp))

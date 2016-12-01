@@ -83,6 +83,9 @@
    (children :initarg :children :initform nil :accessor children)
    ))
 
+(defclass <formula-sub> (<formula>)
+  ((name :initarg :name :initform nil :reader name)))
+
 (defclass <formula-symbol> (<element>)
   (
    (name :initarg :name :initform nil :reader name)
