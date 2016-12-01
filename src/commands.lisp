@@ -87,6 +87,10 @@
       (mapcar #'create-func
               (mapcar #'cast-list arguments))))))
 
+(defcommand-argparser formula-arg
+  (labels ((run (command) (run-command (name command) (args command))))
+    (mapcar #'run argument)))
+
 (defcommand beginsection ((title string))
   (add-child-and-enter (make-instance '<container-block-element>
                                       :name "section"
@@ -203,3 +207,12 @@
                             :title title
                             :children contents
                             )))
+
+;; formula stuff
+(defcommand formula ((contents formula-arg))
+  (make-instance '<formula>
+                 :children contents))
+
+(defcommand formula-symbol ((symbol string))
+  (make-instance '<formula-symbol>
+                 :name symbol))

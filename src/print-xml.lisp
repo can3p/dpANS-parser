@@ -84,3 +84,12 @@
 (defmethod print-xml (stream (element <metavar>) &optional (indent 0))
   (declare (ignore indent))
   (format stream "<metavar var=~s />" (name element)))
+
+(defmethod print-xml (stream (element <formula>) &optional (indent 0))
+    (format stream "<formula>")
+    (print-children stream element indent)
+    (format stream "</formula>"))
+
+(defmethod print-xml (stream (element <formula-symbol>) &optional (indent 0))
+  (declare (ignore indent))
+  (format stream "<symbol>~a</symbol>" (name element)))

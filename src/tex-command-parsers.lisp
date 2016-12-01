@@ -60,6 +60,7 @@
 (define-parser text-element-parser
   (alternative 'word-parser
                'tex-command-parser
+               'inline-formula-parser
                'punctuation-parser
                'whitespace-parser
                'single-newline-parser))
@@ -133,6 +134,27 @@
                                                 'cr-parser
                                                 'single-newline-parser))))
 
+(define-parser inline-formula-parser
+  (consecutive (lambda (d formula dd)
+                 (declare (ignore d dd))
+                 (make-instance '<command>
+                                :name "formula"
+                                :args (list formula)))
+               'dollar-parser
+               (repeat+ 'pass-args 'formula-element-parser)
+               'dollar-parser
+               ))
+
+(define-parser formula-element-parser
+  (alternative 'formula-symbol-parser))
+
+(define-parser formula-symbol-parser
+  (singleton (lambda (word)
+               (make-instance '<command>
+                              :name "formula-symbol"
+                              :args `((,word))))
+             #'identifierp))
+
 (define-parser word-parser
   (singleton #'identity #'identifierp))
 
@@ -180,6 +202,10 @@
 
 (define-parser amp-parser
   (narrow (lambda (punctuation) (string= (contents punctuation) "&"))
+          'punctuation-parser))
+
+(define-parser dollar-parser
+  (narrow (lambda (punctuation) (string= (contents punctuation) "$"))
           'punctuation-parser))
 
 (define-parser dash-parser

@@ -192,4 +192,23 @@ row-some-func&row-other-func&row-third-func{\\tt <=}\\cr
 </document>")
       )))
 
+;; So, $A\\sub b$
+;; <paragraph>So, <formula><symbol>A</symbol><sub><symbol>b</symbol></sub></formula></paragraph>
+;; formulas!
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
+So, $A$
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <paragraph>So, <formula><symbol>A</symbol></formula></paragraph>
+</document>")
+      )))
+
 (finalize)

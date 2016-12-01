@@ -78,6 +78,16 @@
 
 (defclass <paragraph> (<block-element>) ())
 
+(defclass <formula> (<element>)
+  (
+   (children :initarg :children :initform nil :accessor children)
+   ))
+
+(defclass <formula-symbol> (<element>)
+  (
+   (name :initarg :name :initform nil :reader name)
+   ))
+
 (defun reset-document ()
   (let ((document (make-instance '<document>)))
     (setf *document* document)
