@@ -56,6 +56,9 @@
 
       (loop for token in argument
             do (cond
+                 ;; catch case to discover formulas that we cannot parse (yet)
+                 ((and (typep token 'token) (string= (contents token) "$"))
+                  (error "Orphan formula marker found."))
                  ((typep token 'token) (add-string token))
                  ((typep token '<command>) (add-command token))
                  (t (error "Unknown token inside of text block ~a" token))))
