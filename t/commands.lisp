@@ -227,6 +227,24 @@ See \\ChapRef\\Section1
 </document>")
       )))
 
+;; input directive
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "\\input test-file   % and a dummy comment after
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <section title=\"test section\">
+    <paragraph>Parsed contents of test-file.</paragraph>
+  </section>
+</document>")
+      )))
+
 ;; formulas!
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "

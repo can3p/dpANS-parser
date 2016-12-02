@@ -33,6 +33,12 @@
                             chap-a.tex
                             ))
 
+(defun tokenize-dpans-file (file)
+  (let ((fname (make-pathname :directory '(:relative "dpans")
+                              :name file :type "tex"))
+        (asdf-location (asdf:system-source-file :dpans-parser)))
+    (tokenize-file (merge-pathnames fname asdf-location))))
+
 (defun test (&optional file)
   (let ((fname (make-pathname :directory '(:relative "dpans")
                               :name (or file "concept-arrays") :type "tex"))

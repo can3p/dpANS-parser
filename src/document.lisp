@@ -93,7 +93,8 @@
 (defun create-document-from-stream (stream)
   (reset-document)
   (loop for command in stream
-        do (run-command (name command) (args command)))
+        do (when (not (null command)) ;; input command produces null item in a list, let's ignore it
+             (run-command (name command) (args command))))
   *document*)
 
 (defun add-child (element)

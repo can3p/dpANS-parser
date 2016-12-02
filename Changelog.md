@@ -1,5 +1,6 @@
 # Changes
 
+* 2016-12-02 input command support
 * 2016-12-02 def, chapref command support
 * 2016-12-01 $A$ and $A\\sub b$ formula support
 * 2016-12-01 oftype, thefunction and newtermidx commands

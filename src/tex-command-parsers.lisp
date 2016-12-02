@@ -46,6 +46,9 @@
                  (declare (ignore rest))
                  contents)
                (alternative
+                (consecutive 'pass-first 'input-command-parser
+                             ;; block terminator is optional because we may or may not encounter whitspace at the beginning of the included file
+                             (optional nil 'block-terminator-parser))
                 (consecutive 'pass-first 'tex-command-parser 'block-terminator-parser)
                 (consecutive 'pass-first 'text-parser 'block-terminator-parser))))
 
@@ -56,6 +59,30 @@
                         (alternative 'multiple-newline-parser 'single-newline-parser)
                         (optional nil 'whitespace-parser)
                         )))
+
+;; input parser incorporated included file into a list of tokens
+(define-parser input-command-parser
+  (lambda (tokens)
+    (multiple-value-bind (successp command remaining-tokens) (input-command-real-parser tokens)
+      (if (not successp) (values nil nil tokens)
+          (let ((new-tokens (run-command (name command) (args command))))
+            (values t
+                    nil
+                    (concatenate 'list new-tokens remaining-tokens)))))))
+
+(define-parser input-command-real-parser
+  (consecutive (lambda (slash input ws filename)
+                 (declare (ignore slash input ws))
+                 (make-instance '<command>
+                                :name "input"
+                                :args `((,filename))))
+               'backslash-parser
+               (narrow (lambda (w) (string= (contents w) "input"))
+                       'word-parser)
+               (repeat+ 'pass-args 'whitespace-parser)
+               'word-parser
+               ;; (repeat* 'pass-args 'whitespace-parser)
+               ))
 
 (define-parser text-element-parser
   (alternative 'word-parser

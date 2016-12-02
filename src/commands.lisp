@@ -94,6 +94,9 @@
   (labels ((run (command) (run-command (name command) (args command))))
     (mapcar #'run argument)))
 
+(defcommand input ((fname string))
+  (tokenize-dpans-file fname))
+
 (defcommand beginsection ((title string))
   (add-child-and-enter (make-instance '<container-block-element>
                                       :name "section"
