@@ -103,3 +103,8 @@ Here is how wwe parse a text block:
 3.a If it's a new line - discard and go to step 2
 3.b If it's not a command - read stream until we get a command and make it a string. Then go to step 2
 3.c If it's a command - run relevant command and append result to a text
+
+
+## License
+
+All the code except the parts remaining from original project is in Public Domain. Enjoy!

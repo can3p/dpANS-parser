@@ -5,6 +5,9 @@
 
 (asdf:defsystem #:dpans-parser
   :serial t
+  :description "Parser for dpANS common lisp spec draft"
+  :author "Dmitry Petrov <dpetroff@gmail.com>"
+  :license "Public Domain"
   :components ((:module "src"
                 :components
                 (
