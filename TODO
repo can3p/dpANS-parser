@@ -1,4 +1,5 @@
 - <displaythree-func> and childs of paragraph do not have parent assigned parent
 - newlines inside of paragraph should be treated as a whitespace
 - multiple whitespace should be replaced with a single one inside of paragraph
+- \def should define new commands not properties of the document (maybe also properties to document to allow external access)
 

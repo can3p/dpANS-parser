@@ -30,6 +30,14 @@
     (format stream "~a</~a>~%"
             pad (name element))))
 
+(defmethod print-xml (stream (element <chapter>) &optional (indent 0))
+  (let ((pad (make-indent indent)))
+    (format stream "~a<chapter number=~S title=~S ref=~S ref-title=~S>~%"
+            pad (chap-number element) (title element) (ref element) (ref-title element))
+    (print-children stream element indent)
+    (format stream "~a</chapter>~%"
+            pad)))
+
 (defmethod print-xml (stream (element <displaythree>) &optional (indent 0))
   (let ((pad (make-indent indent)))
     (format stream "~a<displaythree title=~S>~%"

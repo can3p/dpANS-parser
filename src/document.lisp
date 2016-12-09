@@ -63,6 +63,14 @@
    (title :initarg :title :initform nil :reader title)
    ))
 
+(defclass <chapter> (<container-block-element>)
+  (
+   (name :initarg :name :initform "chapter" :reader name)
+   (chap-number :initarg :chap-number :initform nil :reader chap-number)
+   (ref :initarg :ref :initform nil :reader ref)
+   (ref-title :initarg :ref-title :initform nil :reader ref-title)
+   ))
+
 
 (defclass <document> (<block-element>)
   (
@@ -105,13 +113,13 @@
   (add-child element)
   (setf *current-element* element))
 
-(defun close-child-and-go-up (element-name element-title)
+(defun close-child-and-go-up (element-name &optional (element-title nil))
   (when (not (string= element-name (name *current-element*)))
     (error "Attempt to close element with different name: ~S vs ~S"
            (name *current-element*)
            element-name))
 
-  (when (not (string= element-title (title *current-element*)))
+  (when (and (not (null element-title)) (not (string= element-title (title *current-element*))))
     (error "Attempt to close element with different title: ~S vs ~S"
            (title *current-element*)
            element-title))

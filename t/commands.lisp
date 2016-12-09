@@ -227,6 +227,30 @@ See \\ChapRef\\Section1
 </document>")
       )))
 
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
+\\beginchapter{1}{One Two}{Three}{Four}
+
+123 456.
+
+\\endchapter
+
+\\bye
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <chapter number=\"1\" title=\"One Two\" ref=\"Three\" ref-title=\"Four\">
+    <paragraph>123 456.</paragraph>
+  </chapter>
+</document>")
+      )))
+
 ;; input directive
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "\\input test-file   % and a dummy comment after

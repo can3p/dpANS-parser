@@ -97,6 +97,13 @@
 (defcommand input ((fname string))
   (tokenize-dpans-file fname))
 
+(defcommand beginchapter ((chapnum string) (title string) (ref string) (ref-title string) )
+  (add-child-and-enter (make-instance '<chapter>
+                                      :chap-number chapnum
+                                      :title title
+                                      :ref ref
+                                      :ref-title ref-title)))
+
 (defcommand beginsection ((title string))
   (add-child-and-enter (make-instance '<container-block-element>
                                       :name "section"
@@ -121,6 +128,9 @@
   (add-child-and-enter (make-instance '<container-block-element>
                                       :name "subsubsubsubsection"
                                       :title title)))
+
+(defcommand endchapter ()
+  (close-child-and-go-up "chapter"))
 
 (defcommand endsection ((title string))
   (close-child-and-go-up "section" title))
@@ -210,6 +220,8 @@
 (defcommand endissue ((term string))
   (declare (ignore term))
   nil)
+
+(defcommand bye () "")
 
 (defcommand ie () "i.e.")
 
