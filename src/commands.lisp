@@ -12,6 +12,13 @@
       (funcall (gethash name *command-argparsers*) argument)
       (error "argparser with a name ~s is not defined" name)))
 
+(defun command-defined-p (name)
+  (not (null (gethash (string-downcase name)
+                      *commands*))))
+
+(defun define-command (name func)
+  (setf (gethash name *commands*) func))
+
 (defmacro defcommand (name args &body body)
   (let* ((lambda-args (mapcar #'(lambda (&rest rest)
                                   (declare (ignore rest))
@@ -21,15 +28,19 @@
                                               ,(string-downcase (symbol-name (cadr args)))
                                               ,larg)))
                                args lambda-args)))
-    `(setf (gethash (string-downcase (symbol-name ',name)) *commands*)
+    `(define-command (string-downcase (symbol-name ',name))
            (lambda ,lambda-args
              (let ,let-args ,@body)))))
 
-(defun run-command (name arguments)
-  (if (gethash name *commands*)
-      (apply (gethash name *commands*) arguments)
-      (error "command with a name ~s is not defined" name)))
-
+(defun run-command (name arguments &key (pass-if-empty nil))
+  (let ((lc-name (string-downcase name)))
+    (cond
+      ((gethash lc-name *commands*) (apply (gethash lc-name *commands*) arguments))
+      ((and *document* (user-command-defined-p lc-name))
+       (apply (get-user-command lc-name) arguments))
+      (t (if pass-if-empty
+             (list (format nil "command with a name ~s is not defined" lc-name))
+             (error "command with a name ~s is not defined" lc-name))))))
 
 (defcommand-argparser string
   (apply #'concatenate 'string (mapcar #'contents argument)))
@@ -147,8 +158,10 @@
 (defcommand endsubsubsubsubsection ((title string))
   (close-child-and-go-up "subsubsubsubsection" title))
 
-(defcommand def ((name string) (value string))
-  (set-property name value))
+(defcommand def ((name string) (value text-block))
+  (if (or (user-command-defined-p name) (user-command-defined-p name))
+      (format t "Command ~s is already defined, skipping~%" name)
+      (define-user-command name (lambda () value))))
 
 (defcommand definesection ((name string))
   (mark-as-section name))

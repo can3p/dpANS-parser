@@ -74,7 +74,7 @@
 
 (defclass <document> (<block-element>)
   (
-   (props :initform (make-hash-table :test 'equal) :reader props)
+   (commands :initform (make-hash-table :test 'equal) :reader commands)
    (sections :initform (make-hash-table :test 'equal) :reader sections)
    ))
 
@@ -129,8 +129,16 @@
 (defun mark-as-section (name)
   (setf (gethash name (sections *document*)) *current-element*))
 
-(defun set-property (name value)
-  (setf (gethash name (props *document*)) value))
+(defun user-command-defined-p (name)
+  (not (null (gethash (string-downcase name)
+                      (commands *document*)))))
+
+(defun define-user-command (name func)
+  (setf (gethash (string-downcase name) (commands *document*))
+        func))
+
+(defun get-user-command (name)
+  (gethash (string-downcase name) (commands *document*)))
 
 ;; (defmethod print-object ((instance <command>) stream)
 ;;   (let ((status (if (is-closing instance) "CLOSE" "OPEN")))

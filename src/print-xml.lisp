@@ -7,9 +7,12 @@
 
 (defun print-children (stream element indent)
   (when (> (length (children element)) 0)
+    (print-elements stream (children element) indent)))
+
+(defun print-elements (stream elements indent)
     (loop with new-indent = (+ 2 indent)
-          for child in (children element)
-          do (print-xml stream child new-indent))))
+          for child in elements
+          do (print-xml stream child new-indent)))
 
 (defgeneric print-xml (stream element &optional indent))
 
@@ -90,12 +93,12 @@
   (format stream "<link type=~s />" (name element)))
 
 (defmethod print-xml (stream (element <chapref>) &optional (indent 0))
-  (declare (ignore indent))
   (let ((name (name element)))
-    (format stream "<link section=~s>~a</link>"
-            (name element)
-            (or (gethash name (props (document element)))
-                "I DO NOT EXIST AND WILL THROW ERROR IN THE FUTURE"))))
+    (format stream "<link section=~s>" name)
+    (print-elements stream
+                    (run-command name nil :pass-if-empty t)
+                    indent)
+    (format stream "</link>")))
 
 (defmethod print-xml (stream (element <metavar>) &optional (indent 0))
   (declare (ignore indent))

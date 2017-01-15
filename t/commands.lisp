@@ -14,15 +14,19 @@
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
 \\def\\SomeProp{Cool text (inside)}%
 
+This is \\SomeProp
+
 "))
   (progn
     (ok successp "Document parsed successfully")
-    (let* ((document (dpans-parser::create-document-from-stream stream)))
-      (dpans-parser::print-xml t document)
-      (is (gethash "SomeProp" (dpans-parser::props document)) "Cool text (inside)")
-      (is (gethash "NonExistingProp" (dpans-parser::props document)) nil)
-      )
-    ))
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <paragraph>This is Cool text (inside)</paragraph>
+</document>")
+      )))
 
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
@@ -222,7 +226,7 @@ See \\ChapRef\\Section1
            (s (make-string-output-stream)))
       (dpans-parser::print-xml s document)
       (is (get-output-stream-string s) "<document>
-  <paragraph>See <link section=\"NonExsiting\">I DO NOT EXIST AND WILL THROW ERROR IN THE FUTURE</link></paragraph>
+  <paragraph>See <link section=\"NonExsiting\">command with a name \"nonexsiting\" is not defined</link></paragraph>
   <paragraph>See <link section=\"Section1\">Section about things</link></paragraph>
 </document>")
       )))
