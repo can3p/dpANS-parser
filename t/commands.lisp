@@ -270,6 +270,9 @@ See \\ChapRef\\Section1
   <section title=\"test section\">
     <paragraph>Parsed contents of test-file.</paragraph>
   </section>
+  <dictionary title=\"test-dict\">
+    <paragraph>test content</paragraph>
+  </dictionary>
 </document>")
       )))
 

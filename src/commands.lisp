@@ -108,6 +108,16 @@
 (defcommand input ((fname string))
   (tokenize-dpans-file fname))
 
+(defcommand includeDictionary ((fname string))
+  (let ((tokens (tokenize-dpans-file fname)))
+    (multiple-value-bind (successp stream) (file-parser tokens)
+      (when (not successp) (error "Unable to tokenize dictionary ~a" fname))
+      (add-child-and-enter (make-instance '<container-block-element>
+                                          :name "dictionary"
+                                          :title fname))
+      (run-commands-from-stream stream)
+      (close-child-and-go-up "dictionary" fname))))
+
 (defcommand beginchapter ((chapnum string) (title string) (ref string) (ref-title string) )
   (add-child-and-enter (make-instance '<chapter>
                                       :chap-number chapnum

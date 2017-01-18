@@ -1,5 +1,6 @@
 # Changes
 
+* 2017-01-19 includeDictionary command
 * 2017-01-15 def becomes a real command definition, no support for arguments yet
 * 2016-12-09 beginchapter, endchapter and bye commands
 * 2016-12-02 input command support

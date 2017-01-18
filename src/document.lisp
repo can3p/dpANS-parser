@@ -100,10 +100,13 @@
 
 (defun create-document-from-stream (stream)
   (reset-document)
+  (run-commands-from-stream stream)
+  *document*)
+
+(defun run-commands-from-stream (stream)
   (loop for command in stream
         do (when (not (null command)) ;; input command produces null item in a list, let's ignore it
-             (run-command (name command) (args command))))
-  *document*)
+             (run-command (name command) (args command)))))
 
 (defun add-child (element)
   (setf (parent element) *current-element*)
