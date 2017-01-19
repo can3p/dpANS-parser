@@ -67,11 +67,11 @@ Next, we intend to work on the following aspect:
 
 ----
 
-## Current Status
+## Current implementation
 
 General idea is to generate object tree that represents a spec
 and print it out as an xml, so that we can convert it later to
-whatever format we find more interesting
+whatever format we find more interesting.
 
 Since we have commands, let's execute them
 
@@ -79,6 +79,8 @@ Since we have commands, let's execute them
 So, as a result from parsing we're getting a long stream
 that consists of commands and text blocks which can contains sentences and
 other commands.
+
+\includeDictionary works as a usual command and is executed along with others.
 
 Commands can be of several types:
 
@@ -97,13 +99,21 @@ So, logic should be like following:
 3.d If definition command assign relevant variable as a document property.
 4. Goto 2
 
-Here is how wwe parse a text block:
+Here is how we parse a text block:
 
 2. Read next element from parsed stream. If nothing is left, we're done, exit
 3.a If it's a new line - discard and go to step 2
 3.b If it's not a command - read stream until we get a command and make it a string. Then go to step 2
 3.c If it's a command - run relevant command and append result to a text
 
+## Current status
+
+Chapter 15 was used as guinea pig and currently is parsed successfully with commented out
+setup.tex and commented out \includeDictionary command (wip). As soon as I finish with it, I'll
+switch to some other random article. Code is rather messy, but we just want to get the
+text parsed, right?
+
+For printing html please check [https://github.com/can3p/dpans-printer](dpans-printer) project.
 
 ## License
 
