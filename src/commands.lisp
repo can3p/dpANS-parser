@@ -118,6 +118,17 @@
       (run-commands-from-stream stream)
       (close-child-and-go-up "dictionary" fname))))
 
+(defcommand begincom ((term string) (ftype string) (type string))
+  (declare (ignore ftype))
+  (add-child-and-enter (make-instance '<dict-article>
+                                      :name "dict-article"
+                                      :title term
+                                      :atype type)))
+
+(defcommand endcom ((term string) (ftype string) (type string))
+  (declare (ignore term ftype type))
+  (close-child-and-go-up "dict-article"))
+
 (defcommand beginchapter ((chapnum string) (title string) (ref string) (ref-title string) )
   (add-child-and-enter (make-instance '<chapter>
                                       :chap-number chapnum

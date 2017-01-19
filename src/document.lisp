@@ -63,6 +63,11 @@
    (title :initarg :title :initform nil :reader title)
    ))
 
+(defclass <dict-article> (<container-block-element>)
+  (
+   (atype :initarg :atype :initform nil :reader atype)
+   ))
+
 (defclass <chapter> (<container-block-element>)
   (
    (name :initarg :name :initform "chapter" :reader name)

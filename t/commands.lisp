@@ -276,6 +276,29 @@ See \\ChapRef\\Section1
 </document>")
       )))
 
+;;dictionaries!
+(multiple-value-bind (successp stream)
+    (dpans-parser::file-parser (dpans-parser::tokenize-string "
+\\begincom{simple-something}\\ftype{Simple Something}
+
+test content
+
+\\endcom%{simple-something}\\ftype{Simple Something}
+
+"))
+  (progn
+    (ok successp "Document parsed successfully")
+    (let* (
+           (document (dpans-parser::create-document-from-stream stream))
+           (s (make-string-output-stream)))
+      (dpans-parser::print-xml s document)
+      (is (get-output-stream-string s) "<document>
+  <dict-article term=\"simple-something\" type=\"Simple Something\">
+    <paragraph>test content</paragraph>
+  </dict-article>
+</document>")
+      )))
+
 ;; formulas!
 (multiple-value-bind (successp stream)
     (dpans-parser::file-parser (dpans-parser::tokenize-string "

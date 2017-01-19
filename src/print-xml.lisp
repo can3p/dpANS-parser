@@ -33,6 +33,14 @@
     (format stream "~a</~a>~%"
             pad (name element))))
 
+(defmethod print-xml (stream (element <dict-article>) &optional (indent 0))
+  (let ((pad (make-indent indent)))
+    (format stream "~a<~a term=~S type=~S>~%"
+            pad (name element) (title element) (atype element))
+    (print-children stream element indent)
+    (format stream "~a</~a>~%"
+            pad (name element))))
+
 (defmethod print-xml (stream (element <chapter>) &optional (indent 0))
   (let ((pad (make-indent indent)))
     (format stream "~a<chapter number=~S title=~S ref=~S ref-title=~S>~%"
