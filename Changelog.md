@@ -1,5 +1,6 @@
 # Changes
 
+* 2017-01-21 label command parsing
 * 2017-01-20 begincom and endcom
 * 2017-01-19 includeDictionary command
 * 2017-01-15 def becomes a real command definition, no support for arguments yet

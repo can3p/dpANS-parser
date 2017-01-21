@@ -125,9 +125,24 @@
                                       :title term
                                       :atype type)))
 
+(defun in-dict-section-p ()
+  (and *current-element* (string= (name *current-element*) "dict-section")))
+
+(defun check-close-dict-section ()
+  (when (in-dict-section-p)
+    (close-child-and-go-up "dict-section")))
+
 (defcommand endcom ((term string) (ftype string) (type string))
   (declare (ignore term ftype type))
+  (check-close-dict-section)
   (close-child-and-go-up "dict-article"))
+
+(defcommand label ((label string))
+  (progn
+   (check-close-dict-section)
+   (add-child-and-enter (make-instance '<dict-section>
+                                       :name "dict-section"
+                                       :title label))))
 
 (defcommand beginchapter ((chapnum string) (title string) (ref string) (ref-title string) )
   (add-child-and-enter (make-instance '<chapter>

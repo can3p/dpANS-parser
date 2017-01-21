@@ -281,7 +281,15 @@ See \\ChapRef\\Section1
     (dpans-parser::file-parser (dpans-parser::tokenize-string "
 \\begincom{simple-something}\\ftype{Simple Something}
 
-test content
+\\label Some section::
+\\typeref{this},
+\\typeref{that}
+
+\\label Description::
+
+This is a description
+
+\\label Empty section:\\None.
 
 \\endcom%{simple-something}\\ftype{Simple Something}
 
@@ -294,7 +302,15 @@ test content
       (dpans-parser::print-xml s document)
       (is (get-output-stream-string s) "<document>
   <dict-article term=\"simple-something\" type=\"Simple Something\">
-    <paragraph>test content</paragraph>
+    <dict-section label=\"Some section\">
+      <paragraph><link type=\"this\" />,
+<link type=\"that\" /></paragraph>
+    </dict-section>
+    <dict-section label=\"Description\">
+      <paragraph>This is a description</paragraph>
+    </dict-section>
+    <dict-section label=\"Empty section\">
+    </dict-section>
   </dict-article>
 </document>")
       )))

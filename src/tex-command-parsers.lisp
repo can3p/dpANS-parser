@@ -49,6 +49,7 @@
                 (consecutive 'pass-first 'input-command-parser
                              ;; block terminator is optional because we may or may not encounter whitspace at the beginning of the included file
                              (optional nil 'block-terminator-parser))
+                (consecutive 'pass-first 'tex-label-command-parser 'block-terminator-parser)
                 (consecutive 'pass-first 'tex-command-parser 'block-terminator-parser)
                 (consecutive 'pass-first 'text-parser 'block-terminator-parser))))
 
@@ -59,6 +60,37 @@
                         (alternative 'multiple-newline-parser 'single-newline-parser)
                         (optional nil 'whitespace-parser)
                         )))
+
+(define-parser tex-label-command-parser
+  (consecutive (lambda (slash label ws text &rest rest)
+                 (declare (ignore slash label ws rest))
+                 (make-instance '<command>
+                                :name "label"
+                                :args (list (remove-if #'null text))))
+               'backslash-parser
+               (narrow (lambda (w) (string= (contents w) "label"))
+                       'word-parser)
+               (repeat+ 'pass-args 'whitespace-parser)
+               (repeat+ 'flatten-args
+                        (consecutive (lambda (&rest rest)
+                                       (mapcar #'(lambda (item)
+                                                   (if (listp item)
+                                                       (car item)
+                                                       item))
+                                               rest))
+                                     'word-parser
+                                     (repeat* 'pass-args 'whitespace-parser)))
+               (alternative
+                (narrow (lambda (punctuation) (string= (contents punctuation) "::"))
+                        'punctuation-parser)
+                (consecutive 'pass-args
+                             'colon-parser
+                             'backslash-parser
+                             (narrow (lambda (w) (string= (contents w) "None"))
+                                     'word-parser)
+                             'punctuation-parser
+                             ))
+               ))
 
 ;; input parser incorporated included file into a list of tokens
 (define-parser input-command-parser
@@ -263,6 +295,10 @@
 
 (define-parser dash-parser
   (narrow (lambda (punctuation) (string= (contents punctuation) "-"))
+          'punctuation-parser))
+
+(define-parser colon-parser
+  (narrow (lambda (punctuation) (string= (contents punctuation) ":"))
           'punctuation-parser))
 
 (define-parser ratio-parser
