@@ -18,6 +18,10 @@
   (file-parser (tokenize-string "\\beginsubsection{List element}
 ")))
 
+(defun test-debug-parse-string (parser str)
+  (let ((*parse-trace-p* t))
+    (funcall parser (tokenize-string str))))
+
 (defun test-create-document ()
   (multiple-value-bind (successp stream)
       (file-parser (tokenize-string "\\beginsubsection{List element}
