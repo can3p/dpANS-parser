@@ -125,7 +125,7 @@
 
 (defun close-child-and-go-up (element-name &optional (element-title nil))
   (when (not (string= element-name (name *current-element*)))
-    (error "Attempt to close element with different name: ~S vs ~S"
+    (error "Attempt to close element with different name: expected ~S but got ~S"
            (name *current-element*)
            element-name))
 
