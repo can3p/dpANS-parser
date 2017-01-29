@@ -110,8 +110,9 @@
 
 (defcommand includeDictionary ((fname string))
   (let ((tokens (tokenize-dpans-file fname)))
-    (multiple-value-bind (successp stream) (file-parser tokens)
+    (multiple-value-bind (successp stream rest) (file-parser tokens)
       (when (not successp) (error "Unable to tokenize dictionary ~a" fname))
+      (when (not (null rest)) (error "includeDictionary: orphan tokens left after parsing file ~a: ~a" fname rest))
       (add-child-and-enter (make-instance '<container-block-element>
                                           :name "dictionary"
                                           :title fname))
@@ -139,10 +140,10 @@
 
 (defcommand label ((label string))
   (progn
-   (check-close-dict-section)
-   (add-child-and-enter (make-instance '<dict-section>
-                                       :name "dict-section"
-                                       :title label))))
+    (check-close-dict-section)
+    (add-child-and-enter (make-instance '<dict-section>
+                                        :name "dict-section"
+                                        :title label))))
 
 (defcommand beginchapter ((chapnum string) (title string) (ref string) (ref-title string) )
   (add-child-and-enter (make-instance '<chapter>
