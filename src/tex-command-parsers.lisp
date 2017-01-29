@@ -131,7 +131,7 @@
                                 :args (list (cons first (cons second rest)))))
                (alternative 'word-parser 'tex-command-parser)
                'text-element-parser
-               (repeat+ #'list 'text-element-parser)))
+               (repeat* #'list 'text-element-parser)))
 
 ;;; This parser succeeds for a backslash followed by a word W with
 ;;; nothing in between the two.  It returns W as the result of the

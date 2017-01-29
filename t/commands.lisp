@@ -16,6 +16,8 @@
 
 This is \\SomeProp
 
+Interesting.
+
 "))
   (progn
     (ok successp "Document parsed successfully")
@@ -25,6 +27,7 @@ This is \\SomeProp
       (dpans-parser::print-xml s document)
       (is (get-output-stream-string s) "<document>
   <paragraph>This is Cool text (inside)</paragraph>
+  <paragraph>Interesting.</paragraph>
 </document>")
       )))
 
