@@ -16,8 +16,8 @@
   (not (null (gethash (string-downcase name)
                       *commands*))))
 
-(defun define-command (name func)
-  (setf (gethash name *commands*) func))
+(defun define-command (name meta func)
+  (setf (gethash name *commands*) (list :meta meta :func func)))
 
 (defmacro defcommand (name args &body body)
   (let* ((lambda-args (mapcar #'(lambda (&rest rest)
@@ -29,13 +29,21 @@
                                               ,larg)))
                                args lambda-args)))
     `(define-command (string-downcase (symbol-name ',name))
-           (lambda ,lambda-args
-             (let ,let-args ,@body)))))
+       (list :argnum ,(length lambda-args))
+       (lambda ,lambda-args
+         (let ,let-args ,@body)))))
 
 (defun run-command (name arguments &key (pass-if-empty nil))
   (let ((lc-name (string-downcase name)))
     (cond
-      ((gethash lc-name *commands*) (apply (gethash lc-name *commands*) arguments))
+      ((gethash lc-name *commands*)
+       (let* ((cmd (gethash lc-name *commands*))
+              (meta (getf cmd :meta))
+              (func (getf cmd :func)))
+         (when (not (equal (getf meta :argnum) (length arguments)))
+           (error "Error while calling command ~s. Expected ~s arguments but got ~s" name (getf meta :argnum) (length arguments)))
+         (apply func arguments)
+         ))
       ((and *document* (user-command-defined-p lc-name))
        (apply (get-user-command lc-name) arguments))
       (t (if pass-if-empty
